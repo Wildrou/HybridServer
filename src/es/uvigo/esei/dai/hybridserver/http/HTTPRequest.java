@@ -26,27 +26,39 @@ public class HTTPRequest {
 		this.resourceParams = new HashMap<>();
 		if (x != null) {
 			String[] chain = x.split(" ");
-			if(esMetodo(chain[0]))
-			this.method = HTTPRequestMethod.valueOf(chain[0]);
+			if (esMetodo(chain[0]))
+				this.method = HTTPRequestMethod.valueOf(chain[0]);
 			else
-				throw new HTTPParseException();
-			
-			
+				throw new HTTPParseException("Nombre de metodo erroneo");
+            if(chain.length != 3)
+            	throw new HTTPParseException("Formato de cabecera invalido");
 			this.resource_chain = chain[1];
 			String[] resource_chain_array = chain[1].split("/");
 
-			for (int i = 1; i < resource_chain_array.length - 1; i++) {
-				path[i - 1] = resource_chain_array[i];
-			}
+			if (resource_chain_array.length >= 2) {
 
-			this.resource_name = resource_chain_array[chain.length - 1].split("\\?")[0];
+				this.path = new String[resource_chain_array.length - 1];
+				for (int i = 1; i < resource_chain_array.length; i++) {
+					path[i - 1] = resource_chain_array[i];
+				}
 
-			String resource_params = resource_chain_array[chain.length - 1].split("\\?")[1];
-			String[] params_array = resource_params.split("&");
-			for (int i = 0; i < params_array.length; i++) {
-				String[] param_value = params_array[i].split("=");
-				this.resourceParams.put(param_value[0], param_value[1]);
+				if (resource_chain_array[resource_chain_array.length - 1].contains("\\?")) {
+					this.resource_name = resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
 
+					String resource_params = resource_chain_array[chain.length - 1].split("\\?")[1];
+					String[] params_array = resource_params.split("&");
+					for (int i = 0; i < params_array.length; i++) {
+						String[] param_value = params_array[i].split("=");
+						this.resourceParams.put(param_value[0], param_value[1]);
+
+					}
+				}else {
+					this.resource_name = resource_chain_array[resource_chain_array.length - 1];
+					
+				}
+			}else {
+				this.resource_name = chain[1];
+				
 			}
 
 			this.version = chain[2];
@@ -58,6 +70,8 @@ public class HTTPRequest {
 			this.headerParams = new HashMap<>();
 
 			String[] header_params = x.split(":");
+			if(header_params.length != 2)
+				throw new HTTPParseException("Formato de cabecera invalida");
 			this.resourceParams.put(header_params[0], header_params[1]);
 
 		}
@@ -70,17 +84,17 @@ public class HTTPRequest {
 			this.content_length = 0;
 		}
 
-		if(this.content_length != 0) {
-			char [] buff_contenido= new char [this.content_length];
+		if (this.content_length != 0) {
+			char[] buff_contenido = new char[this.content_length];
 			br.read(buff_contenido, 0, this.content_length);
-			this.content= new String(buff_contenido);
+			this.content = new String(buff_contenido);
 			String type = headerParams.get("Content-Type");
 			if (type != null && type.startsWith("application/x-www-form-urlencoded")) {
-			   this.content = URLDecoder.decode(content, "UTF-8");
+				this.content = URLDecoder.decode(content, "UTF-8");
 			}
-			
+
 		}
-		
+
 	}
 
 	public HTTPRequestMethod getMethod() {
@@ -143,18 +157,16 @@ public class HTTPRequest {
 
 		return sb.toString();
 	}
-	
+
 	private boolean esMetodo(String s) {
-		
-		for(HTTPRequestMethod en: HTTPRequestMethod.values()) {
-			
-			if(en.name().equals(s))
+
+		for (HTTPRequestMethod en : HTTPRequestMethod.values()) {
+
+			if (en.name().equals(s))
 				return true;
-			
+
 		}
-		
+
 		return false;
 	}
 }
-
-
