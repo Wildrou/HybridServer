@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URLDecoder;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HTTPRequest {
@@ -20,37 +20,36 @@ public class HTTPRequest {
 	private String content;
 
 	public HTTPRequest(Reader reader) throws IOException, HTTPParseException {
-
 		BufferedReader br = new BufferedReader(reader);
 		String x = br.readLine();
-		this.resourceParams = new HashMap<>();
-		this.headerParams = new HashMap<>();
-		this.resource_name="";
+		this.resourceParams = new LinkedHashMap<>();
+		this.headerParams = new LinkedHashMap<>();
+		this.resource_name = "";
 		if (x != null) {
 			String[] chain = x.split(" ");
 			if (esMetodo(chain[0]))
 				this.method = HTTPRequestMethod.valueOf(chain[0]);
 			else
 				throw new HTTPParseException("Nombre de metodo erroneo");
-            if(chain.length != 3)
-            	throw new HTTPParseException("Formato de cabecera invalido");
-			
-            this.resource_chain = chain[1];
+			if (chain.length != 3)
+				throw new HTTPParseException("Formato de cabecera invalido");
+
+			this.resource_chain = chain[1];
 			String[] resource_chain_array = chain[1].split("/");
-           
+
 			if (resource_chain_array.length > 2) {
 
 				this.path = new String[resource_chain_array.length - 1];
-				for (int i = 1; i < resource_chain_array.length && resource_chain_array[i].indexOf('?') ==-1; i++) {
-					
+				for (int i = 1; i < resource_chain_array.length && resource_chain_array[i].indexOf('?') == -1; i++) {
+
 					path[i - 1] = resource_chain_array[i];
-					this.resource_name+=resource_chain_array[i]+'/';
+					this.resource_name += resource_chain_array[i] + '/';
 				}
 
-				if (resource_chain_array[resource_chain_array.length - 1].indexOf('?')!= -1) {
-					
+				if (resource_chain_array[resource_chain_array.length - 1].indexOf('?') != -1) {
+
 					this.resource_name += resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
-					this.path[path.length-1]= resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
+					this.path[path.length - 1] = resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
 					String resource_params = resource_chain_array[chain.length - 1].split("\\?")[1];
 					String[] params_array = resource_params.split("&");
 					for (int i = 0; i < params_array.length; i++) {
@@ -58,13 +57,20 @@ public class HTTPRequest {
 						this.resourceParams.put(param_value[0], param_value[1]);
 
 					}
-				}else {
-					this.resource_name = resource_chain_array[resource_chain_array.length - 1];
-					
+				} else {
+
+					StringBuilder sb = new StringBuilder(this.resource_name);
+					sb.deleteCharAt(this.resource_name.length() - 1);
+					this.resource_name = sb.toString();
 				}
-			}else {
-				this.resource_name = chain[1];
-				
+			} else if (!chain[1].equals("/")) {
+				this.resource_name = resource_chain_array[1];
+				this.path = new String[1];
+				this.path[0] = this.resource_name;
+
+			} else {
+				this.resource_name = "";
+				this.path = new String[0];
 			}
 
 			this.version = chain[2];
@@ -73,13 +79,10 @@ public class HTTPRequest {
 
 		while ((x = br.readLine()) != null && x.trim().length() != 0) {
 
-			System.out.println("Funciona");
-			System.out.println("X es: "+x);
 			String[] header_params = x.split(":");
-			if(header_params.length != 2)
+			if (header_params.length != 2)
 				throw new HTTPParseException("Formato de cabecera invalida");
-			System.out.println("header params 0 es: "+header_params[0]+" y header params 1 es: "+header_params[1]);
-			this.headerParams.put(header_params[0], header_params[1]);
+			this.headerParams.put(header_params[0], header_params[1].trim());
 
 		}
 
@@ -91,15 +94,33 @@ public class HTTPRequest {
 			this.content_length = 0;
 		}
 
-		if (this.content_length != 0) {
+		if (this.content_length != 0 && this.method != HTTPRequestMethod.POST) {
 			char[] buff_contenido = new char[this.content_length];
 			br.read(buff_contenido, 0, this.content_length);
 			this.content = new String(buff_contenido);
 			String type = headerParams.get("Content-Type");
-			if (type != null && type.startsWith("application/x-www-form-urlencoded")) {
+			if (type != null && type.startsWith("application/x-www-form-urlencoded")) 
 				this.content = URLDecoder.decode(content, "UTF-8");
+		
+		}else if(this.content_length != 0) {
+			
+			char[] buff_contenido = new char[this.content_length];
+			br.read(buff_contenido, 0, this.content_length);
+			this.content = new String(buff_contenido);
+			String type = headerParams.get("Content-Type");
+			if (type != null && type.startsWith("application/x-www-form-urlencoded")) 
+				this.content = URLDecoder.decode(content, "UTF-8");
+			String[] post_params= this.content.split("&");
+			for (int i = 0; i < post_params.length; i++) {
+				
+			String [] params=post_params[i].split("=");
+			this.resourceParams.put(params[0], params[1]);
+				
+				
+				
+				
 			}
-
+			
 		}
 
 	}
