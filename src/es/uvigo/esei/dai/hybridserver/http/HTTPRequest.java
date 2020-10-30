@@ -35,16 +35,17 @@ public class HTTPRequest {
 			this.resource_chain = chain[1];
 			String[] resource_chain_array = chain[1].split("/");
 
-			if (resource_chain_array.length >= 2) {
+			if (resource_chain_array.length > 2) {
 
 				this.path = new String[resource_chain_array.length - 1];
-				for (int i = 1; i < resource_chain_array.length; i++) {
+				for (int i = 1; i < resource_chain_array.length && !resource_chain_array[i].contains("\\?"); i++) {
 					path[i - 1] = resource_chain_array[i];
 				}
 
 				if (resource_chain_array[resource_chain_array.length - 1].contains("\\?")) {
+				
 					this.resource_name = resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
-
+					this.path[path.length-1]=this.resource_name;
 					String resource_params = resource_chain_array[chain.length - 1].split("\\?")[1];
 					String[] params_array = resource_params.split("&");
 					for (int i = 0; i < params_array.length; i++) {
