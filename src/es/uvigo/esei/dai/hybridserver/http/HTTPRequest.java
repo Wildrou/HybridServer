@@ -24,6 +24,8 @@ public class HTTPRequest {
 		BufferedReader br = new BufferedReader(reader);
 		String x = br.readLine();
 		this.resourceParams = new HashMap<>();
+		this.headerParams = new HashMap<>();
+		this.resource_name="";
 		if (x != null) {
 			String[] chain = x.split(" ");
 			if (esMetodo(chain[0]))
@@ -32,20 +34,23 @@ public class HTTPRequest {
 				throw new HTTPParseException("Nombre de metodo erroneo");
             if(chain.length != 3)
             	throw new HTTPParseException("Formato de cabecera invalido");
-			this.resource_chain = chain[1];
+			
+            this.resource_chain = chain[1];
 			String[] resource_chain_array = chain[1].split("/");
-
+           
 			if (resource_chain_array.length > 2) {
 
 				this.path = new String[resource_chain_array.length - 1];
-				for (int i = 1; i < resource_chain_array.length && !resource_chain_array[i].contains("\\?"); i++) {
+				for (int i = 1; i < resource_chain_array.length && resource_chain_array[i].indexOf('?') ==-1; i++) {
+					
 					path[i - 1] = resource_chain_array[i];
+					this.resource_name+=resource_chain_array[i]+'/';
 				}
 
-				if (resource_chain_array[resource_chain_array.length - 1].contains("\\?")) {
-				
-					this.resource_name = resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
-					this.path[path.length-1]=this.resource_name;
+				if (resource_chain_array[resource_chain_array.length - 1].indexOf('?')!= -1) {
+					
+					this.resource_name += resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
+					this.path[path.length-1]= resource_chain_array[resource_chain_array.length - 1].split("\\?")[0];
 					String resource_params = resource_chain_array[chain.length - 1].split("\\?")[1];
 					String[] params_array = resource_params.split("&");
 					for (int i = 0; i < params_array.length; i++) {
@@ -68,12 +73,13 @@ public class HTTPRequest {
 
 		while ((x = br.readLine()) != null && x.trim().length() != 0) {
 
-			this.headerParams = new HashMap<>();
-
+			System.out.println("Funciona");
+			System.out.println("X es: "+x);
 			String[] header_params = x.split(":");
 			if(header_params.length != 2)
 				throw new HTTPParseException("Formato de cabecera invalida");
-			this.resourceParams.put(header_params[0], header_params[1]);
+			System.out.println("header params 0 es: "+header_params[0]+" y header params 1 es: "+header_params[1]);
+			this.headerParams.put(header_params[0], header_params[1]);
 
 		}
 
