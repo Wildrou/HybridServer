@@ -79,7 +79,8 @@ public class HTTPRequest {
 
 		while ((x = br.readLine()) != null && x.trim().length() != 0) {
 
-			String[] header_params = x.split(":");
+			String[] header_params = x.split(": ");
+			System.out.println("LA LINEA X ES: "+x);
 			if (header_params.length != 2)
 				throw new HTTPParseException("Formato de cabecera invalida");
 			this.headerParams.put(header_params[0], header_params[1].trim());

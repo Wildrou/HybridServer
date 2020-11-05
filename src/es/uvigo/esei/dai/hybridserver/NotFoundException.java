@@ -14,6 +14,9 @@ public class NotFoundException extends Exception {
 		super(err);
 		this.uuid=uuid;
 	}
+	public NotFoundException(String err) {
+		super(err);
+	}
 	
 	public String getUuid() {
 		

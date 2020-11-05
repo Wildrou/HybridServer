@@ -18,7 +18,7 @@ public class HybridServer {
 	private Map<String,String> webs;
 	private ExecutorService threadPool;
 	public HybridServer() {
-		
+		this.serverThread = new Thread();
 		this.serverThread.start();
 	
 		
@@ -26,6 +26,7 @@ public class HybridServer {
 	
 	public HybridServer(Map<String, String> pages) {
 		this.webs= new HashMap<String,String>();
+		this.serverThread = new Thread();
 		this.serverThread.start();
 		
 		

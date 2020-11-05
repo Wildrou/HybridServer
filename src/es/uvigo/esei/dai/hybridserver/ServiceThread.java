@@ -7,7 +7,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
 
-import org.apache.http.HttpStatus;
+
 
 import es.uvigo.esei.dai.hybridserver.http.HTTPParseException;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequest;
@@ -33,19 +33,25 @@ private Socket cliente;
 			Writer wr = new OutputStreamWriter(socket_cliente.getOutputStream());
 			HTTPResponse http_response = new HTTPResponse();  
 			HTTPRequest http_request = new HTTPRequest(rd);
-			
+			try {
 			
 			HTTPRequestMethod method = http_request.getMethod();
 			String uuid;
 			WebManager webs = new WebManager();
 			String web_content;
+			System.out.println("EL NOMBRE DEL RECURSINI ES: "+http_request.getResourceName());
+                if(!http_request.getResourceName().equals("html"))
+				throw new BadRequestException("El nombre del recurso no es correcto");
+	          
+				
 			
 			switch(method) {
 			
 			
 			case GET: 
 			 
-			 
+
+				
 			 
 			 
 			  if(!http_request.getResourceParameters().containsKey("uuid")){
@@ -57,10 +63,14 @@ private Socket cliente;
 			 
 				  try {
 			  uuid = http_request.getResourceParameters().get("uuid");
+			  if(uuid == null)
+				  throw new NotFoundException("El uuid no existe");
+			  else
 		      web_content = webs.getWeb(uuid);
+			  
 		      http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
 		      http_response.setStatus(HTTPResponseStatus.S200);
-			  }catch(Exception e) {
+			  }catch(NotFoundException e) {
 			  
 			  web_content = "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n" + 
 				 		"<html>\r\n" + 
@@ -167,13 +177,18 @@ private Socket cliente;
 			
 			
 			}
+		    
+		
+			}catch  (BadRequestException e) {
+				http_response.setVersion(http_request.getHttpVersion());
+				http_response.setStatus(HTTPResponseStatus.S400);
+				http_response.print(wr);
+				
+			}
 		
 		
 		
-		
-		
-		
-		} catch (HTTPParseException e) {
+		}catch (HTTPParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		
@@ -184,6 +199,8 @@ private Socket cliente;
 		
     
 		
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		

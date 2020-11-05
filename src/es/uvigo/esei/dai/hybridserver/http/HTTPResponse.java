@@ -97,13 +97,19 @@ public class HTTPResponse {
 			pw.write(code);
 			pw.write(" ");
 			pw.write(this.status.getStatus());
-			pw.write("\n");
-
+			
+			pw.write("\r\n");
+             if(!this.listParameters().isEmpty()) {
 			pw.write(this.listParameters().toString());
-			pw.write("\n");
-
+			pw.write("\r\n");
+             }
 			if (this.content.length() != 0) {
+				pw.write("Content-Length: "+this.content.length());
+				pw.write("\r\n\r\n");
+				
 				pw.write(this.content);
+			}else {
+				pw.write("\r\n");
 			}
 			pw.flush();
 
