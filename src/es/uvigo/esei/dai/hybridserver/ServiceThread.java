@@ -49,11 +49,6 @@ private Socket cliente;
 			
 			
 			case GET: 
-			 
-
-				
-			 
-			 
 			  if(!http_request.getResourceParameters().containsKey("uuid")){
 				  web_content= webs.webList();
 				  http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
@@ -63,9 +58,6 @@ private Socket cliente;
 			 
 				  try {
 			  uuid = http_request.getResourceParameters().get("uuid");
-			  if(uuid == null)
-				  throw new NotFoundException("El uuid no existe");
-			  else
 		      web_content = webs.getWeb(uuid);
 			  
 		      http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));

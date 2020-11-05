@@ -26,6 +26,7 @@ public class HybridServer {
 	
 	public HybridServer(Map<String, String> pages) {
 		this.webs= new HashMap<String,String>();
+		this.webs.putAll(pages);
 		this.serverThread = new Thread();
 		this.serverThread.start();
 		
