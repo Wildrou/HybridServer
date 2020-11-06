@@ -15,8 +15,8 @@ public class HybridServer {
 	private static final int SERVICE_PORT = 8888;
 	private Thread serverThread;
 	private boolean stop;
-	private Map<String,String> webs;
 	private ExecutorService threadPool;
+	private WebManager wbmanager;
 	public HybridServer() {
 		this.serverThread = new Thread();
 		this.serverThread.start();
@@ -25,8 +25,7 @@ public class HybridServer {
 	}
 	
 	public HybridServer(Map<String, String> pages) {
-		this.webs= new HashMap<String,String>();
-		this.webs.putAll(pages);
+		this.wbmanager= new WebManager(pages);
 		this.serverThread = new Thread();
 		this.serverThread.start();
 		

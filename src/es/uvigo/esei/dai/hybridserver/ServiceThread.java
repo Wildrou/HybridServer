@@ -37,7 +37,6 @@ private Socket cliente;
 			
 			HTTPRequestMethod method = http_request.getMethod();
 			String uuid;
-			WebManager webs = new WebManager();
 			String web_content;
 			System.out.println("EL NOMBRE DEL RECURSINI ES: "+http_request.getResourceName());
                 if(!http_request.getResourceName().equals("html"))
@@ -50,7 +49,7 @@ private Socket cliente;
 			
 			case GET: 
 			  if(!http_request.getResourceParameters().containsKey("uuid")){
-				  web_content= webs.webList();
+				  web_content= WebManager.webList();
 				  http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
 				  http_response.setStatus(HTTPResponseStatus.S200);
 				  
@@ -58,7 +57,7 @@ private Socket cliente;
 			 
 				  try {
 			  uuid = http_request.getResourceParameters().get("uuid");
-		      web_content = webs.getWeb(uuid);
+		      web_content = WebManager.getWeb(uuid);
 			  
 		      http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
 		      http_response.setStatus(HTTPResponseStatus.S200);
@@ -92,6 +91,18 @@ private Socket cliente;
 			case POST:
 				
 				
+				if(http_request.getContentLength() == 0)
+					throw new Exception("El contenido de la pagina esta vacio");
+				
+			    String content= WebManager.putPage(http_request.getContent());
+				http_response.setContent(content);
+				http_response.setStatus(HTTPResponseStatus.S200);
+				http_response.setVersion(http_request.getHttpVersion());
+				http_response.print(wr);
+				
+				
+			
+				
 				
 			break;
 			
@@ -100,9 +111,9 @@ private Socket cliente;
 				
 				try {
 					
-			if((uuid = http_request.getResourceParameters().get("uuid")) != null) {
+			if((uuid = http_request.getResourceParameters().get("uuid")) != null ) {
 		
-			webs.delete(uuid);	
+			WebManager.delete(uuid);	
 			web_content = "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n" + 
 			 		"<html>\r\n" + 
 			 		"<head>\r\n" + 
@@ -115,8 +126,9 @@ private Socket cliente;
 			 		"</html>";	
 			http_response.setStatus(HTTPResponseStatus.S200);
 			http_response.setContent(web_content);	
+			http_response.setVersion(http_request.getHttpVersion());
 			http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
-			
+			http_response.print(wr);
 				
 			}else {
 				throw new BadRequestException("There's no uuid parameter");
@@ -139,8 +151,9 @@ private Socket cliente;
 				  sb.append(html1).append(e.getUuid()).append(html2);
 				  web_content= sb.toString();
 				  http_response.setStatus(HTTPResponseStatus.S404);
+				  http_response.setVersion(http_request.getHttpVersion());
 				  http_response.putParameter("Content-Length", Integer.toString(sb.toString().getBytes().length));
-				
+				  http_response.print(wr);
 			}catch (BadRequestException e) {
 				http_response.setStatus(HTTPResponseStatus.S400);
 				web_content = "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n" + 
@@ -155,7 +168,8 @@ private Socket cliente;
 				 		"</html>";
 				  
 				  http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
-				
+				  http_response.setVersion(http_request.getHttpVersion());
+				  http_response.print(wr);
 			}
 			
 				
