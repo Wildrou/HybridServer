@@ -48,7 +48,7 @@ public class PagesDBDAO implements PagesDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		throw new NotFoundException("No se encontró ninguna web con ese uuid");
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class PagesDBDAO implements PagesDAO {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return sb.toString();
 	}
 	
 	@Override
