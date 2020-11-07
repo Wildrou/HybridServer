@@ -91,8 +91,31 @@ public class PagesDBDAO implements PagesDAO {
 	@Override
 	public void delete(String uuid) throws NotFoundException {
 		String query = "DELETE FROM " + db_nombre.toUpperCase() + " WHERE uuid LIKE ?";
-		
-		
+		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
+			try(PreparedStatement statement = connection.prepareStatement(query)){
+				statement.setString(1, uuid);
+				int result = statement.executeUpdate();
+				if(result!=1) throw new NotFoundException("404 Page not found",uuid);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public String  putPage(String content) {
+		String uuid= createUuid();
+		String query = "INSERT INTO " + db_nombre.toUpperCase() + " VALUES (?,?)";
+		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
+			try(PreparedStatement statement = connection.prepareStatement(query)){
+				statement.setString(1, uuid);
+				statement.setString(2, content);
+				statement.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "<a href=\"html?uuid=" + uuid + "\">" + uuid + "</a>";
 	}
 
 }
