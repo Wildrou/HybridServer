@@ -1,13 +1,12 @@
-package es.uvigo.esei.dai.hybridserver.dao;
+package es.uvigo.esei.dai.controller;
 
-import java.util.List;
 
 
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 import es.uvigo.esei.dai.model.Page;
 
-public interface PagesDAO {
-
+public interface PagesController {
+	
 	public String getWeb(String uuid) throws NotFoundException;
 	public  boolean checkUuid(String uuid);
 	public  String webList();
@@ -16,5 +15,5 @@ public interface PagesDAO {
 	public  String  putPage(String content);
 	
 	
-	
+
 }

@@ -18,16 +18,24 @@ public class PagesDBDAO implements PagesDAO {
 	private final String db_nombre;
 
 	public PagesDBDAO(Properties properties) {
-		this.db_url = properties.getProperty("db.url");
-		this.db_user = properties.getProperty("db.user");
-		this.db_password = properties.getProperty("db.password");
-		String[] url = db_url.split("/");
-		this.db_nombre=url[url.length-1];
+		if(properties != null) {
+			this.db_url = properties.getProperty("db.url");
+			this.db_user = properties.getProperty("db.user");
+			this.db_password = properties.getProperty("db.password");
+			String[] url = db_url.split("/");
+			this.db_nombre=url[url.length-1];
+			}else {
+				this.db_url = "jdbc:mysql://localhost:3306/hstestdb";
+				this.db_user = "hsdb";
+				this.db_password = "hsdbpass";
+				this.db_nombre= "HSTESTDB";
+				
+			}
 	}
 
 	@Override
 	public String getWeb(String uuid) throws NotFoundException {
-		String query = "SELECT * FROM " + db_nombre.toUpperCase() + " WHERE uuid LIKE ?";
+		String query = "SELECT * FROM HTML WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
@@ -45,7 +53,7 @@ public class PagesDBDAO implements PagesDAO {
 
 	@Override
 	public boolean checkUuid(String uuid) {
-		String query = "SELECT * FROM " + db_nombre.toUpperCase() + " WHERE uuid LIKE ?";
+		String query = "SELECT * FROM HTML WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
@@ -64,7 +72,7 @@ public class PagesDBDAO implements PagesDAO {
 	@Override
 	public String webList() {
 		StringBuilder sb = new StringBuilder();		
-		String query = "SELECT uuid FROM " + db_nombre.toUpperCase();
+		String query = "SELECT uuid FROM HTML";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				try(ResultSet result = statement.executeQuery()){
@@ -90,14 +98,17 @@ public class PagesDBDAO implements PagesDAO {
 
 	@Override
 	public void delete(String uuid) throws NotFoundException {
-		String query = "DELETE FROM " + db_nombre.toUpperCase() + " WHERE uuid LIKE ?";
+		String query = "DELETE FROM HTML WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
+				System.out.println("EL DELETE ESTALLA POR: "+statement.toString());
 				int result = statement.executeUpdate();
+				System.out.println("EL DELETE ESTALLA POR: "+result);
 				if(result!=1) throw new NotFoundException("404 Page not found",uuid);
 			}
 		} catch (SQLException e) {
+			
 			e.printStackTrace();
 		}
 	}
@@ -105,7 +116,7 @@ public class PagesDBDAO implements PagesDAO {
 	@Override
 	public String  putPage(String content) {
 		String uuid= createUuid();
-		String query = "INSERT INTO " + db_nombre.toUpperCase() + " VALUES (?,?)";
+		String query = "INSERT INTO HTML VALUES (?,?)";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);

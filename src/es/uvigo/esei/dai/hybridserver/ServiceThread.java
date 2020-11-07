@@ -7,7 +7,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
 
-import es.uvigo.ese.dai.controller.WebManager;
+import es.uvigo.esei.dai.controller.DefaultPagesController;
 import es.uvigo.esei.dai.hybridserver.http.HTTPParseException;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequest;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequestMethod;
@@ -16,10 +16,11 @@ import es.uvigo.esei.dai.hybridserver.http.HTTPResponseStatus;
 
 public class ServiceThread implements Runnable {
 private Socket cliente;
-
-	public ServiceThread(Socket cliente) {
+private DefaultPagesController controller;
+	public ServiceThread(Socket cliente, DefaultPagesController controller) {
 		
 	this.cliente = cliente;
+	this.controller= controller;
 }
 
 	@Override
@@ -48,7 +49,7 @@ private Socket cliente;
 			
 			case GET: 
 			  if(!http_request.getResourceParameters().containsKey("uuid")){
-				  web_content= WebManager.webList();
+				  web_content= controller.webList();
 				  http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
 				  http_response.setStatus(HTTPResponseStatus.S200);
 				  
@@ -56,7 +57,7 @@ private Socket cliente;
 			 
 				  try {
 			  uuid = http_request.getResourceParameters().get("uuid");
-		      web_content = WebManager.getWeb(uuid);
+		      web_content = controller.getWeb(uuid);
 			  
 		      http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
 		      http_response.setStatus(HTTPResponseStatus.S200);
@@ -97,7 +98,7 @@ private Socket cliente;
 	            System.out.println("El contenido antes del SUBSTRING ES: "+http_request.getContent());
 			    //String content= http_request.getContent().substring(5, http_request.getContent().length());
 			    String content= http_request.getResourceParameters().get("html");
-	            content= WebManager.putPage(content);
+	            content= controller.putPage(content);
 				http_response.setContent(content);
 				http_response.setStatus(HTTPResponseStatus.S200);
 				http_response.setVersion(http_request.getHttpVersion());
@@ -136,7 +137,7 @@ private Socket cliente;
 					
 			if((uuid = http_request.getResourceParameters().get("uuid")) != null ) {
 		
-			WebManager.delete(uuid);	
+			controller.delete(uuid);	
 			web_content = "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n" + 
 			 		"<html>\r\n" + 
 			 		"<head>\r\n" + 

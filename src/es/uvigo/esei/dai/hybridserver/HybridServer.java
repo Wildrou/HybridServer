@@ -1,6 +1,8 @@
 package es.uvigo.esei.dai.hybridserver;
 
 import java.io.IOException;
+
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -10,8 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import es.uvigo.ese.dai.controller.WebManager;
-import es.uvigo.esei.dai.hybridserver.dao.PagesMapDAO;
+import es.uvigo.esei.dai.controller.*;
+import es.uvigo.esei.dai.hybridserver.dao.*;
 
 
 public class HybridServer {
@@ -19,24 +21,30 @@ public class HybridServer {
 	private Thread serverThread;
 	private boolean stop;
 	private ExecutorService threadPool;
-	private PagesDAO dao;
+	private DefaultPagesController controller;
+	
 	public HybridServer() {
+		
+		this.controller= new DefaultPagesController(new PagesDBDAO(null));
 		this.serverThread = new Thread();
-		this.serverThread.start();
 	
 		
 	}
 	
 	public HybridServer(Map<String, String> pages) {
-		this.dao= new PagesMapDAO(pages);
+		this.controller= new DefaultPagesController(new PagesMapDAO(pages));
 		this.serverThread = new Thread();
-		this.serverThread.start();
+		
 		
 		
 	}
 
 	public HybridServer(Properties properties) {
-		// TODO Auto-generated constructor stub
+		
+		this.controller= new DefaultPagesController(new PagesDBDAO(properties));
+		this.serverThread = new Thread();
+		
+		
 	}
 
 	public int getPort() {
@@ -54,7 +62,7 @@ public class HybridServer {
 					while (true) {
 						    Socket socket = serverSocket.accept();
 							if (stop) break;	 
-							  threadPool.execute(new ServiceThread(socket));
+							  threadPool.execute(new ServiceThread(socket,controller));
 							 
 						}
 					

@@ -1,4 +1,4 @@
-package es.uvigo.ese.dai.controller;
+package es.uvigo.esei.dai.controller;
 
 public class PageNotFoundException extends Exception {
 

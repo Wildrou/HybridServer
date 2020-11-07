@@ -1,0 +1,11 @@
+
+DROP DATABASE IF EXISTS hstestdb;
+CREATE DATABASE hstestdb;
+USE hstestdb;
+
+CREATE TABLE HTML (
+ uuid CHAR(36) NOT NULL,
+ content TEXT NOT NULL,
+ PRIMARY KEY (uuid));
+
+
