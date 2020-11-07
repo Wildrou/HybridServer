@@ -7,8 +7,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
 
-
-
+import es.uvigo.ese.dai.controller.WebManager;
 import es.uvigo.esei.dai.hybridserver.http.HTTPParseException;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequest;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequestMethod;
@@ -90,17 +89,41 @@ private Socket cliente;
 			
 			case POST:
 				
-				
+				try {
 				if(http_request.getContentLength() == 0)
-					throw new Exception("El contenido de la pagina esta vacio");
-				
-			    String content= WebManager.putPage(http_request.getContent());
+					throw new BadRequestException("El contenido de la pagina esta vacio");
+				if(http_request.getResourceParameters().containsKey("html")) {
+					
+	            System.out.println("El contenido antes del SUBSTRING ES: "+http_request.getContent());
+			    //String content= http_request.getContent().substring(5, http_request.getContent().length());
+			    String content= http_request.getResourceParameters().get("html");
+	            content= WebManager.putPage(content);
 				http_response.setContent(content);
 				http_response.setStatus(HTTPResponseStatus.S200);
 				http_response.setVersion(http_request.getHttpVersion());
 				http_response.print(wr);
-				
-				
+				}else {
+					
+					throw new BadRequestException("El recurso no es html");
+				}
+				}catch(BadRequestException e) {
+					
+					http_response.setStatus(HTTPResponseStatus.S400);
+					web_content = "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n" + 
+					 		"<html>\r\n" + 
+					 		"<head>\r\n" + 
+					 		"   <title>400 Bad Request </title>\r\n" + 
+					 		"</head>\r\n" + 
+					 		"<body>\r\n" + 
+					 		"   <h1>Not Found</h1>\r\n" + 
+					 		"   <p>The requested URL /t.html was not found on this server.</p>\r\n" + 
+					 		"</body>\r\n" + 
+					 		"</html>";
+					  
+					  http_response.putParameter("Content-Length", Integer.toString(web_content.getBytes().length));
+					  http_response.setVersion(http_request.getHttpVersion());
+					  http_response.print(wr);
+				}
 			
 				
 				

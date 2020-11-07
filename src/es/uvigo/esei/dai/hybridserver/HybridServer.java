@@ -10,13 +10,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import es.uvigo.ese.dai.controller.WebManager;
+import es.uvigo.esei.dai.hybridserver.dao.PagesMapDAO;
+
 
 public class HybridServer {
 	private static final int SERVICE_PORT = 8888;
 	private Thread serverThread;
 	private boolean stop;
 	private ExecutorService threadPool;
-	private WebManager wbmanager;
+	private PagesDAO dao;
 	public HybridServer() {
 		this.serverThread = new Thread();
 		this.serverThread.start();
@@ -25,7 +28,7 @@ public class HybridServer {
 	}
 	
 	public HybridServer(Map<String, String> pages) {
-		this.wbmanager= new WebManager(pages);
+		this.dao= new PagesMapDAO(pages);
 		this.serverThread = new Thread();
 		this.serverThread.start();
 		

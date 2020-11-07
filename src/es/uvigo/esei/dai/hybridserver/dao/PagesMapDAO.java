@@ -1,13 +1,13 @@
-package es.uvigo.esei.dai.hybridserver;
+package es.uvigo.esei.dai.hybridserver.dao;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-public class WebManager {
+import es.uvigo.esei.dai.hybridserver.*;
+public class PagesMapDAO {
 private static Map<String,String> webs;
 
-public WebManager(Map <String,String> pages) {
+public PagesMapDAO(Map <String,String> pages) {
     webs = new HashMap<>();
 	webs.putAll(pages);
 }
@@ -78,7 +78,7 @@ public static void delete(String uuid) throws NotFoundException {
 public static String  putPage(String content) {
 	String uuid= createUuid();
 	webs.put(uuid, content);
-	
+	System.out.println("El contenido metido en web manager es: "+content);
 	return "<a href=\"html?uuid=" + uuid + "\">" + uuid + "</a>";
 	
 }

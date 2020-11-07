@@ -25,6 +25,7 @@ public class HTTPRequest {
 		this.resourceParams = new LinkedHashMap<>();
 		this.headerParams = new LinkedHashMap<>();
 		this.resource_name = "";
+		
 		if (x != null) {
 			String[] chain = x.split(" ");
 			if (esMetodo(chain[0]))
@@ -122,21 +123,25 @@ public class HTTPRequest {
 				this.content = URLDecoder.decode(content, "UTF-8");
 
 		} else if (this.content_length != 0) {
-
+            
 			char[] buff_contenido = new char[this.content_length];
 			br.read(buff_contenido, 0, this.content_length);
 			this.content = new String(buff_contenido);
+			System.out.println("El contenido1 en el http_req es: "+this.content);
 			String type = headerParams.get("Content-Type");
 			if (type != null && type.startsWith("application/x-www-form-urlencoded"))
 				this.content = URLDecoder.decode(content, "UTF-8");
+		
 			String[] post_params = this.content.split("&");
+			System.out.println("El contenido2 en el http_req es: "+this.content);
 			for (int i = 0; i < post_params.length; i++) {
 
 				String[] params = post_params[i].split("=");
 				this.resourceParams.put(params[0], params[1]);
 
 			}
-
+			
+			
 		}
 
 	}
