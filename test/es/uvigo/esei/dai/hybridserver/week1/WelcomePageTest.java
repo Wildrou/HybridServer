@@ -36,6 +36,7 @@ public class WelcomePageTest extends HybridServerTestCase {
 	@Test
 	public void testMultipleWelcome() throws IOException {
 		for (int i = 0; i < 10; i++) {
+			System.out.println("El url es: "+getContent(url));
 			assertThat(getContent(url), containsString("Hybrid Server"));
 		}
 	}

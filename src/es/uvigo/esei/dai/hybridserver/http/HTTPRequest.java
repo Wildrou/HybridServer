@@ -28,10 +28,15 @@ public class HTTPRequest {
 		
 		if (x != null) {
 			String[] chain = x.split(" ");
-			if (esMetodo(chain[0]))
+			System.out.println("Valor de primera linea es x: "+x);
+			if (esMetodo(chain[0])) {
+				System.out.println("Valor de chain 0 es: "+chain[0]);
 				this.method = HTTPRequestMethod.valueOf(chain[0]);
-			else
+			}
+			else {
+				System.out.println("Valor de chain 0 es: "+chain[0]);
 				throw new HTTPParseException("Nombre de metodo erroneo");
+			}
 			if (chain.length != 3)
 				throw new HTTPParseException("Formato de cabecera invalido");
 

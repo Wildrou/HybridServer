@@ -17,14 +17,16 @@ import es.uvigo.esei.dai.hybridserver.dao.*;
 
 
 public class HybridServer {
-	private static final int SERVICE_PORT = 8888;
+	private final int servicePort;
 	private Thread serverThread;
 	private boolean stop;
 	private ExecutorService threadPool;
 	private DefaultPagesController controller;
+	private final  int numClientes;
 	
 	public HybridServer() {
-		
+		this.numClientes=50;
+		this.servicePort=8888;
 		this.controller= new DefaultPagesController(new PagesDBDAO(null));
 		this.serverThread = new Thread();
 	
@@ -32,6 +34,8 @@ public class HybridServer {
 	}
 	
 	public HybridServer(Map<String, String> pages) {
+		this.numClientes=50;
+		this.servicePort=8888;
 		this.controller= new DefaultPagesController(new PagesMapDAO(pages));
 		this.serverThread = new Thread();
 		
@@ -40,7 +44,8 @@ public class HybridServer {
 	}
 
 	public HybridServer(Properties properties) {
-		
+		this.numClientes=Integer.parseInt(properties.getProperty("numClients"));
+		this.servicePort=Integer.parseInt(properties.getProperty("port"));
 		this.controller= new DefaultPagesController(new PagesDBDAO(properties));
 		this.serverThread = new Thread();
 		
@@ -48,16 +53,16 @@ public class HybridServer {
 	}
 
 	public int getPort() {
-		return SERVICE_PORT;
+		return servicePort;
 	}
 	
 	public void start() {
 		this.serverThread = new Thread() {
 			@Override
 			public void run() {
-				try (final ServerSocket serverSocket = new ServerSocket(SERVICE_PORT)) {
+				try (final ServerSocket serverSocket = new ServerSocket(servicePort)) {
 					
-					threadPool = Executors.newFixedThreadPool(50);
+					threadPool = Executors.newFixedThreadPool(numClientes);
 					
 					while (true) {
 						    Socket socket = serverSocket.accept();
@@ -79,7 +84,7 @@ public class HybridServer {
 	public void stop() {
 		this.stop = true;
 		
-		try (Socket socket = new Socket("localhost", SERVICE_PORT)) {
+		try (Socket socket = new Socket("localhost", servicePort)) {
 			// Esta conexión se hace, simplemente, para "despertar" el hilo servidor
 		} catch (IOException e) {
 			throw new RuntimeException(e);

@@ -76,9 +76,12 @@ public class PagesDBDAO implements PagesDAO {
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				try(ResultSet result = statement.executeQuery()){
+					sb.append("<html> <head><title>Hybrid Server</title></head><body>"
+							+ "<h1>Hybrid Server</h1>");
 					while(result.next()) {
 						sb.append("<p><a href=\"html?uuid=").append(result.getString("uuid")).append("\">").append(result.getString("uuid")).append("</a></p>\n");
 					}
+					sb.append("</body></html>");
 				}
 			}
 		} catch (SQLException e) {

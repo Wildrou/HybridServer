@@ -39,10 +39,20 @@ private DefaultPagesController controller;
 			String uuid;
 			String web_content;
 			System.out.println("EL NOMBRE DEL RECURSINI ES: "+http_request.getResourceName());
-                if(!http_request.getResourceName().equals("html"))
-				throw new BadRequestException("El nombre del recurso no es correcto");
-	          
+               
+			if(http_request.getResourceChain().equals("/")) {
+			http_response.setVersion(http_request.getHttpVersion());
+			http_response.setStatus(HTTPResponseStatus.S200);
+			http_response.setContent("<html> <head><title>Hybrid Server</title>"
+					+ "</head><body><h1>Hybrid Server</h1> <a href=\"/html\">html</a></body></html>");
+			System.out.println("YEPAAAAAAAAAAAAA");
+			http_response.print(wr);
 				
+			}else {
+			if(!http_request.getResourceName().equals("html"))
+				throw new BadRequestException("El nombre del recurso no es correcto, no es html");
+	          
+			
 			
 			switch(method) {
 			
@@ -208,12 +218,24 @@ private DefaultPagesController controller;
 			
 			}
 		    
-		
+			}
 			}catch  (BadRequestException e) {
 				http_response.setVersion(http_request.getHttpVersion());
 				http_response.setStatus(HTTPResponseStatus.S400);
+				System.out.println("YEPAAAAAAAAAAAAA");
 				http_response.print(wr);
 				
+			}catch  (RuntimeException e) {
+				http_response.setVersion(http_request.getHttpVersion());
+				http_response.setStatus(HTTPResponseStatus.S500);
+				http_response.print(wr);
+				
+			}
+			catch (IOException e) {
+				http_response.setVersion(http_request.getHttpVersion());
+				http_response.setStatus(HTTPResponseStatus.S500);
+				http_response.print(wr);
+			
 			}
 		
 		
@@ -221,15 +243,8 @@ private DefaultPagesController controller;
 		}catch (HTTPParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		
-		
-    
-		
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
