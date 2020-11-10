@@ -17,7 +17,7 @@ public class HTTPResponse {
 	private Map<String, String> parameters;
 
 	public HTTPResponse() {
-		this.status = null;
+		this.status =HTTPResponseStatus.S200;
 		this.version = "";
 		this.content = "";
 		this.parameters = new LinkedHashMap<>();

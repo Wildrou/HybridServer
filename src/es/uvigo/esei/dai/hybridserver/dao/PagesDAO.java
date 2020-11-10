@@ -1,10 +1,7 @@
 package es.uvigo.esei.dai.hybridserver.dao;
 
-import java.util.List;
-
 
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
-import es.uvigo.esei.dai.model.Page;
 
 public interface PagesDAO {
 

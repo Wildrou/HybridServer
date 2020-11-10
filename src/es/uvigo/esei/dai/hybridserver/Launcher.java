@@ -18,8 +18,8 @@ public class Launcher {
 				new HybridServer(props).start();
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.err.println("Error leyendo el fichero");
 			}
 
 		}

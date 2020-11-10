@@ -3,7 +3,6 @@ package es.uvigo.esei.dai.controller;
 
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
-import es.uvigo.esei.dai.model.Page;
 
 public class DefaultPagesController implements PagesController {
 	private final PagesDAO dao;

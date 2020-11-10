@@ -3,7 +3,7 @@ package es.uvigo.esei.dai.controller;
 
 
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
-import es.uvigo.esei.dai.model.Page;
+
 
 public interface PagesController {
 	

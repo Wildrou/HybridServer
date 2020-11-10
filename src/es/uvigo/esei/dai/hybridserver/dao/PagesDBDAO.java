@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.UUID;
 
+import javax.management.RuntimeErrorException;
+
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
 public class PagesDBDAO implements PagesDAO {
@@ -15,20 +17,17 @@ public class PagesDBDAO implements PagesDAO {
 	private final String db_url;
 	private final String db_user;
 	private final String db_password;
-	private final String db_nombre;
 
 	public PagesDBDAO(Properties properties) {
 		if(properties != null) {
 			this.db_url = properties.getProperty("db.url");
 			this.db_user = properties.getProperty("db.user");
 			this.db_password = properties.getProperty("db.password");
-			String[] url = db_url.split("/");
-			this.db_nombre=url[url.length-1];
+			
 			}else {
 				this.db_url = "jdbc:mysql://localhost:3306/hstestdb";
 				this.db_user = "hsdb";
 				this.db_password = "hsdbpass";
-				this.db_nombre= "HSTESTDB";
 				
 			}
 	}
@@ -47,6 +46,8 @@ public class PagesDBDAO implements PagesDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
+			
 		}
 		throw new NotFoundException("No se encontró ninguna web con ese uuid");
 	}
@@ -65,6 +66,7 @@ public class PagesDBDAO implements PagesDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return false;
 	}
@@ -86,6 +88,7 @@ public class PagesDBDAO implements PagesDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		return sb.toString();
@@ -105,14 +108,13 @@ public class PagesDBDAO implements PagesDAO {
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
-				System.out.println("EL DELETE ESTALLA POR: "+statement.toString());
 				int result = statement.executeUpdate();
-				System.out.println("EL DELETE ESTALLA POR: "+result);
 				if(result!=1) throw new NotFoundException("404 Page not found",uuid);
 			}
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -128,6 +130,7 @@ public class PagesDBDAO implements PagesDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return "<a href=\"html?uuid=" + uuid + "\">" + uuid + "</a>";
 	}
