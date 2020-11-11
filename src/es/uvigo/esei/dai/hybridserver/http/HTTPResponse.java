@@ -24,7 +24,6 @@ public class HTTPResponse {
 	}
 
 	public HTTPResponseStatus getStatus() {
-		// TODO Auto-generated method stub
 		return this.status;
 	}
 
@@ -33,7 +32,6 @@ public class HTTPResponse {
 	}
 
 	public String getVersion() {
-		// TODO Auto-generated method stub
 		return this.version;
 	}
 
@@ -42,7 +40,6 @@ public class HTTPResponse {
 	}
 
 	public String getContent() {
-		// TODO Auto-generated method stub
 		return this.content;
 	}
 
@@ -51,12 +48,10 @@ public class HTTPResponse {
 	}
 
 	public Map<String, String> getParameters() {
-		// TODO Auto-generated method stub
 		return this.parameters;
 	}
 
 	public String putParameter(String name, String value) {
-		// TODO Auto-generated method stub
 		String previous_value = null;
 		if (this.containsParameter(name))
 			previous_value = parameters.get(name);
@@ -82,7 +77,6 @@ public class HTTPResponse {
 
 	public List<String> listParameters() {
 		List<String> parameters_list = new ArrayList<>();
-		// parameters_list.addAll(this.parameters.keySet());
 		for (Map.Entry<String, String> entry : parameters.entrySet()) {
 			parameters_list.add(entry.getKey() + ": " + entry.getValue());
 		}

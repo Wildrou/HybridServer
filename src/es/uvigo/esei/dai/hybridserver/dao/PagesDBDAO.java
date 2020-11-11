@@ -49,7 +49,7 @@ public class PagesDBDAO implements PagesDAO {
 			throw new RuntimeException(e);
 			
 		}
-		throw new NotFoundException("No se encontró ninguna web con ese uuid");
+		throw new NotFoundException("No webs found by the uuid specified");
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class PagesDBDAO implements PagesDAO {
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
 				int result = statement.executeUpdate();
-				if(result!=1) throw new NotFoundException("404 Page not found",uuid);
+				if(result!=1) throw new NotFoundException("Not page found by the specified uuid when trying to delete");
 			}
 		} catch (SQLException e) {
 			

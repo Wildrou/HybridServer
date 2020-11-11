@@ -42,12 +42,12 @@ public class ServiceThread implements Runnable {
 				if (http_request.getResourceChain().equals("/")) {
 					http_response.setVersion(http_request.getHttpVersion());
 					http_response.setContent("<html> <head><title>Hybrid Server</title>"
-							+ "</head><body><h1>Hybrid Server</h1> <a href=\"/html\">html</a></body></html>");
+							+ "</head><body><p>Miguel Arias Perez</p><p>Victor Otero Cabaleiro</p><h1>Hybrid Server</h1> <a href=\"/html\">html</a></body></html>");
 					http_response.print(wr);
 
 				} else {
 					if (!http_request.getResourceName().equals("html"))
-						throw new BadRequestException("El nombre del recurso no es correcto, no es html");
+						throw new BadRequestException("The resource names doest not match html or any valid resource");
 
 					switch (method) {
 
@@ -80,7 +80,7 @@ public class ServiceThread implements Runnable {
 
 						try {
 							if (http_request.getContentLength() == 0)
-								throw new BadRequestException("El contenido de la pagina esta vacio");
+								throw new BadRequestException("The content is empty");
 							if (http_request.getResourceParameters().containsKey("html")) {
 								
 								String content = http_request.getResourceParameters().get("html");
@@ -89,7 +89,7 @@ public class ServiceThread implements Runnable {
 								http_response.setVersion(http_request.getHttpVersion());
 							} else {
 
-								throw new BadRequestException("El recurso no es html");
+								throw new BadRequestException("The resource name is not html");
 							}
 						} catch (BadRequestException e) {
 

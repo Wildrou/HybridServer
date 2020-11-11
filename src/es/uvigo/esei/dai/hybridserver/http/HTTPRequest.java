@@ -30,9 +30,9 @@ public class HTTPRequest {
 			String[] chain = x.split(" ");
 			
 			if (chain.length != 3)
-				throw new HTTPParseException("Formato de cabecera invalido");
+				throw new HTTPParseException("Invalid header format");
 			if (!esMetodo(chain[0])) 
-				throw new HTTPParseException("Nombre de metodo erroneo");
+				throw new HTTPParseException("Invalid method name");
 			
 			
 			
@@ -101,7 +101,7 @@ public class HTTPRequest {
 
 				String[] header_params = x.split(": ");
 				if (header_params.length != 2)
-					throw new HTTPParseException("Formato de cabecera invalida");
+					throw new HTTPParseException("Invalid header format");
 				this.headerParams.put(header_params[0], header_params[1].trim());
 
 			}
@@ -145,47 +145,38 @@ public class HTTPRequest {
 	}
 
 	public HTTPRequestMethod getMethod() {
-		// TODO Auto-generated method stub
 		return this.method;
 	}
 
 	public String getResourceChain() {
-		// TODO Auto-generated method stub
 		return this.resource_chain;
 	}
 
 	public String[] getResourcePath() {
-		// TODO Auto-generated method stub
 		return this.path;
 	}
 
 	public String getResourceName() {
-		// TODO Auto-generated method stub
 		return this.resource_name;
 	}
 
 	public Map<String, String> getResourceParameters() {
-		// TODO Auto-generated method stub
 		return this.resourceParams;
 	}
 
 	public String getHttpVersion() {
-		// TODO Auto-generated method stub
 		return this.version;
 	}
 
 	public Map<String, String> getHeaderParameters() {
-		// TODO Auto-generated method stub
 		return this.headerParams;
 	}
 
 	public String getContent() {
-		// TODO Auto-generated method stub
 		return this.content;
 	}
 
 	public int getContentLength() {
-		// TODO Auto-generated method stub
 		return this.content_length;
 	}
 

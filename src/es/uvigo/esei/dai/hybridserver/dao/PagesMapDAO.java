@@ -16,7 +16,7 @@ public PagesMapDAO(Map <String,String> pages)  {
 	
 public  String getWeb(String uuid) throws NotFoundException {
 	 if(!checkUuid(uuid))
-		 throw new NotFoundException("No se encuentra el uuid");
+		 throw new NotFoundException("No webs found by the uuid specified");
 	return this.webs.get(uuid);
 	
 	
@@ -57,7 +57,7 @@ public   String createUuid() {
 public  void delete(String uuid) throws NotFoundException {
 	
 	if(webs.remove(uuid) == null)
-		throw new NotFoundException("404 Page not found",uuid);
+		throw new NotFoundException("Not page found by the specified uuid when trying to delete");
 	
 	
 
