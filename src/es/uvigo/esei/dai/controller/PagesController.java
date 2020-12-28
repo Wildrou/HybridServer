@@ -9,7 +9,7 @@ public interface PagesController {
 	
 	public String getWeb(String uuid) throws NotFoundException;
 	public  boolean checkUuid(String uuid);
-	public  String webList();
+	public  ArrayList<String> webList();
 	public   String createUuid();
 	public  void delete(String uuid) throws NotFoundException;
 	public  String  putPage(String content);

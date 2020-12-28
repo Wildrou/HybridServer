@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -72,18 +73,15 @@ public class PagesDBDAO implements PagesDAO {
 	}
 	
 	@Override
-	public String webList() {
-		StringBuilder sb = new StringBuilder();		
+	public ArrayList<String> webList() {
 		String query = "SELECT uuid FROM HTML";
+		ArrayList<String> uuids= new ArrayList<>();
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				try(ResultSet result = statement.executeQuery()){
-					sb.append("<html> <head><title>Hybrid Server</title></head><body>"
-							+ "<h1>Hybrid Server</h1>");
 					while(result.next()) {
-						sb.append("<p><a href=\"html?uuid=").append(result.getString("uuid")).append("\">").append(result.getString("uuid")).append("</a></p>\n");
+						uuids.add(result.getString("uuid"));
 					}
-					sb.append("</body></html>");
 				}
 			}
 		} catch (SQLException e) {
@@ -91,7 +89,7 @@ public class PagesDBDAO implements PagesDAO {
 			throw new RuntimeException(e);
 		}
 		
-		return sb.toString();
+		return uuids;
 	}
 	
 	@Override
@@ -132,7 +130,7 @@ public class PagesDBDAO implements PagesDAO {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		return "<a href=\"html?uuid=" + uuid + "\">" + uuid + "</a>";
+		return uuid;
 	}
 
 }

@@ -1,6 +1,8 @@
 package es.uvigo.esei.dai.controller;
 
 
+import java.util.ArrayList;
+
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
 
@@ -24,7 +26,7 @@ public class DefaultPagesController implements PagesController {
 	}
 
 	@Override
-	public String webList() {
+	public ArrayList<String> webList() {
 		
 		return this.dao.webList();
 	}

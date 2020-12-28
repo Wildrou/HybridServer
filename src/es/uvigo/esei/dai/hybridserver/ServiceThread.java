@@ -13,6 +13,7 @@ import es.uvigo.esei.dai.hybridserver.http.HTTPRequest;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequestMethod;
 import es.uvigo.esei.dai.hybridserver.http.HTTPResponse;
 import es.uvigo.esei.dai.hybridserver.http.HTTPResponseStatus;
+import utils.HTMLUtils;
 
 public class ServiceThread implements Runnable {
 	private Socket cliente;
@@ -53,7 +54,7 @@ public class ServiceThread implements Runnable {
 
 					case GET:
 						if (!http_request.getResourceParameters().containsKey("uuid")) {
-							web_content = controller.webList();
+							web_content = HTMLUtils.generateHTMLWebs(controller.webList());
 							http_response.setContent(web_content);
 
 						} else {
@@ -84,9 +85,9 @@ public class ServiceThread implements Runnable {
 							if (http_request.getResourceParameters().containsKey("html")) {
 								
 								String content = http_request.getResourceParameters().get("html");
-								content = controller.putPage(content);
+								content = HTMLUtils.generateNewPageLink(controller.putPage(content));
+								http_response.putParameter("Content-Type","text/html");
 								http_response.setContent(content);
-								http_response.setVersion(http_request.getHttpVersion());
 							} else {
 
 								throw new BadRequestException("The resource name is not html");
@@ -94,9 +95,11 @@ public class ServiceThread implements Runnable {
 						} catch (BadRequestException e) {
 
 							http_response.setStatus(HTTPResponseStatus.S400);
-							http_response.setVersion(http_request.getHttpVersion());
+					
 
 						}
+						http_response.setVersion(http_request.getHttpVersion());
+						http_response.putParameter("Content-Type","text/html");
 						http_response.print(wr);
 
 						break;
@@ -109,7 +112,6 @@ public class ServiceThread implements Runnable {
 
 								controller.delete(uuid);
 
-								http_response.setVersion(http_request.getHttpVersion());
 
 							} else {
 								throw new BadRequestException("There's no uuid parameter");
@@ -118,12 +120,11 @@ public class ServiceThread implements Runnable {
 						} catch (NotFoundException e) {
 
 							http_response.setStatus(HTTPResponseStatus.S404);
-							http_response.setVersion(http_request.getHttpVersion());
 						} catch (BadRequestException e) {
 							http_response.setStatus(HTTPResponseStatus.S400);
-							http_response.setVersion(http_request.getHttpVersion());
 						}
-
+						http_response.setVersion(http_request.getHttpVersion());
+						http_response.putParameter("Content-Type","text/html");
 						http_response.print(wr);
 
 						break;

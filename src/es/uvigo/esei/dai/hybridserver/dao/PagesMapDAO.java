@@ -1,4 +1,4 @@
-package es.uvigo.esei.dai.hybridserver.dao;
+/*package es.uvigo.esei.dai.hybridserver.dao;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,4 +74,4 @@ public  String  putPage(String content) {
 }
 
 
-}
+} */

@@ -28,7 +28,7 @@ public class HybridServer {
 		this.numClients=50;
 		this.servicePort=8888;
 		this.controller= new DefaultPagesController(new PagesDBDAO(null));
-		this.serverThread = new Thread();
+		
 	
 		
 	}
@@ -37,7 +37,7 @@ public class HybridServer {
 		this.numClients=50;
 		this.servicePort=8888;
 		this.controller= new DefaultPagesController(new PagesMapDAO(pages));
-		this.serverThread = new Thread();
+	
 		
 		
 		
@@ -47,7 +47,6 @@ public class HybridServer {
 		this.numClients=Integer.parseInt(properties.getProperty("numClients"));
 		this.servicePort=Integer.parseInt(properties.getProperty("port"));
 		this.controller= new DefaultPagesController(new PagesDBDAO(properties));
-		this.serverThread = new Thread();
 		
 		
 	}
