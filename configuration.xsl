@@ -27,13 +27,13 @@
 		<div class="connections">
 			<h3><strong>Connections</strong></h3>
 			<div class="http">
-				<strong>HttpPort: </strong><xsl:value-of select="c:http"/> 
+				<strong>HttpPort:</strong>&#160;<xsl:value-of select="c:http"/> 
 			</div>
 			<div class="webService">
-				<strong>WebService: </strong><xsl:value-of select="c:webservice"></xsl:value-of>
+				<strong>WebService:</strong>&#160;<xsl:value-of select="c:webservice"></xsl:value-of>
 			</div>
 			<div class="numClients">
-				<strong>numClients: </strong><xsl:value-of select="c:numClients"></xsl:value-of>
+				<strong>numClients:</strong>&#160;<xsl:value-of select="c:numClients"></xsl:value-of>
 			</div>	
 		</div>
 	</xsl:template>
@@ -42,13 +42,13 @@
 		<div class="database">
 			<h3><strong>Database</strong></h3>
 			<div class="user">
-				<strong>User: </strong><xsl:value-of select="c:user"></xsl:value-of>
+				<strong>User:</strong>&#160;<xsl:value-of select="c:user"></xsl:value-of>
 			</div>
 			<div class="password">
-				<strong>Password: </strong><xsl:value-of select="c:password"></xsl:value-of>
+				<strong>Password:</strong>&#160;<xsl:value-of select="c:password"></xsl:value-of>
 			</div>
 			<div class="url">
-				<strong>Url: </strong><xsl:value-of select="c:url"></xsl:value-of>
+				<strong>Url:</strong>&#160;<xsl:value-of select="c:url"></xsl:value-of>
 			</div>
 		</div>
 	</xsl:template>
@@ -59,10 +59,10 @@
 				<xsl:for-each select="c:server">
 					<h4><xsl:value-of select="@name"></xsl:value-of></h4>
 					<ul>
-						<li><strong>Wsdl: </strong><xsl:value-of select="@wsdl"></xsl:value-of></li>
-						<li><strong>Namespace: </strong><xsl:value-of select="@namespace"></xsl:value-of></li>
-						<li><strong>Service: </strong><xsl:value-of select="@service"></xsl:value-of></li>
-						<li><strong>HttpAddress: </strong><xsl:value-of select="@httpAddress"></xsl:value-of></li>
+						<li><strong>Wsdl:</strong>&#160;<xsl:value-of select="@wsdl"></xsl:value-of></li>
+						<li><strong>Namespace:</strong>&#160;<xsl:value-of select="@namespace"></xsl:value-of></li>
+						<li><strong>Service:</strong>&#160;<xsl:value-of select="@service"></xsl:value-of></li>
+						<li><strong>HttpAddress:</strong>&#160;<xsl:value-of select="@httpAddress"></xsl:value-of></li>
 					</ul>
 				</xsl:for-each>
 		</div>
