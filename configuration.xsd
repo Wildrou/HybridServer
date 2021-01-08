@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/configurationxsd" xmlns:tns="http://www.example.org/configurationxsd" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.esei.uvigo.es/dai/hybridserver" 
+	xmlns:tns="http://www.esei.uvigo.es/dai/hybridserver" 
+	elementFormDefault="qualified">
 
-
+	<element name="configuration">
+		<complexType>
+			<all>
+				<element name="connections" type="tns:connections" minOccurs="1" maxOccurs="1"></element>
+				<element name="database" type="tns:database" minOccurs="1" maxOccurs="1"></element>
+				<element name="servers" type="tns:servers" minOccurs="1" maxOccurs="1"></element>
+			</all>
+		</complexType>
+	</element>
+	
+	<complexType name="connections">
+		<all>
+			<element name="http" type="positiveInteger"></element>
+			<element name="webservice" type="anyURI"></element>
+			<element name="numClients" type="positiveInteger"></element>
+		</all>
+	</complexType>
+	
+	<complexType name="database">
+		<all>
+			<element name="user" type="string"></element> 
+			<element name="password" type="string"></element>
+			<element name="url" type="anyURI"></element>
+		</all>
+	</complexType>
+	
+	<complexType name="servers">
+		<sequence minOccurs="1" maxOccurs="unbounded">
+			<element name="server" type="tns:server"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="server">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="wsdl" type="anyURI" use="required"></attribute>
+		<attribute name="namespace" type="anyURI" use="required"></attribute>
+		<attribute name="service" type="string" use="required"></attribute>
+		<attribute name="httpAddress" type="anyURI" use="required"></attribute>
+	</complexType>
 
 </schema>
