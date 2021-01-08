@@ -21,19 +21,21 @@ public class HybridServer {
 	private Thread serverThread;
 	private boolean stop;
 	private ExecutorService threadPool;
-	private DefaultPagesController controller;
+	//private DefaultPagesController controller;
 	private final  int numClients;
+	private final Properties properties;
 	
 	public HybridServer() {
 		this.numClients=50;
 		this.servicePort=8888;
-		this.controller= new DefaultPagesController(new PagesDBDAO(null));
+		this.properties=null;
+		//this.controller= new DefaultPagesController(new HTMLDBDAO(null));
 		
 	
 		
 	}
 	
-	public HybridServer(Map<String, String> pages) {
+	/*public HybridServer(Map<String, String> pages) {
 		this.numClients=50;
 		this.servicePort=8888;
 		this.controller= new DefaultPagesController(new PagesMapDAO(pages));
@@ -41,12 +43,13 @@ public class HybridServer {
 		
 		
 		
-	}
+	}*/
 
 	public HybridServer(Properties properties) {
 		this.numClients=Integer.parseInt(properties.getProperty("numClients"));
 		this.servicePort=Integer.parseInt(properties.getProperty("port"));
-		this.controller= new DefaultPagesController(new PagesDBDAO(properties));
+		this.properties=properties;
+		//this.controller= new DefaultPagesController(new HTMLDBDAO(properties));
 		
 		
 	}
@@ -66,7 +69,7 @@ public class HybridServer {
 					while (true) {
 						    Socket socket = serverSocket.accept();
 							if (stop) break;	 
-							  threadPool.execute(new ServiceThread(socket,controller));
+							  threadPool.execute(new ServiceThread(socket,properties));
 							 
 						}
 					

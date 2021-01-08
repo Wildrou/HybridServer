@@ -9,17 +9,16 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
 
-import javax.management.RuntimeErrorException;
 
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
-public class PagesDBDAO implements PagesDAO {
+public class XSLTDBDAO implements PagesDAO {
 
 	private final String db_url;
 	private final String db_user;
 	private final String db_password;
 
-	public PagesDBDAO(Properties properties) {
+	public XSLTDBDAO(Properties properties) {
 		if(properties != null) {
 			this.db_url = properties.getProperty("db.url");
 			this.db_user = properties.getProperty("db.user");
@@ -32,10 +31,10 @@ public class PagesDBDAO implements PagesDAO {
 				
 			}
 	}
-
+	
 	@Override
 	public String getWeb(String uuid) throws NotFoundException {
-		String query = "SELECT * FROM HTML WHERE uuid LIKE ?";
+		String query = "SELECT * FROM XSLT WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
@@ -55,7 +54,7 @@ public class PagesDBDAO implements PagesDAO {
 
 	@Override
 	public boolean checkUuid(String uuid) {
-		String query = "SELECT * FROM HTML WHERE uuid LIKE ?";
+		String query = "SELECT * FROM XSLT WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
@@ -74,7 +73,7 @@ public class PagesDBDAO implements PagesDAO {
 	
 	@Override
 	public ArrayList<String> webList() {
-		String query = "SELECT uuid FROM HTML";
+		String query = "SELECT uuid FROM XSLT";
 		ArrayList<String> uuids= new ArrayList<>();
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
@@ -102,7 +101,7 @@ public class PagesDBDAO implements PagesDAO {
 
 	@Override
 	public void delete(String uuid) throws NotFoundException {
-		String query = "DELETE FROM HTML WHERE uuid LIKE ?";
+		String query = "DELETE FROM XSLT WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
@@ -119,7 +118,7 @@ public class PagesDBDAO implements PagesDAO {
 	@Override
 	public String  putPage(String content) {
 		String uuid= createUuid();
-		String query = "INSERT INTO HTML VALUES (?,?)";
+		String query = "INSERT INTO XSLT VALUES (?,?)";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);

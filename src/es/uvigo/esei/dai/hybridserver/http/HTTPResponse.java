@@ -122,4 +122,12 @@ public class HTTPResponse {
 
 		return writer.toString();
 	}
+	
+	public void setContentType(String resource) {
+		if(resource.equals("html")) {
+			this.putParameter("Content-Type", MIME.TEXT_HTML.getMime());
+		}else {
+			this.putParameter("Content-Type", MIME.APPLICATION_XML.getMime());
+		}
+	}
 }

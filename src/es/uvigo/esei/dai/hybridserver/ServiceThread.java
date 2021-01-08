@@ -6,23 +6,30 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.Properties;
 
 import es.uvigo.esei.dai.controller.DefaultPagesController;
+import es.uvigo.esei.dai.controller.PagesController;
+import es.uvigo.esei.dai.hybridserver.dao.HTMLDBDAO;
+import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
+import es.uvigo.esei.dai.hybridserver.dao.XMLDBDAO;
+import es.uvigo.esei.dai.hybridserver.dao.XSDDBDAO;
+import es.uvigo.esei.dai.hybridserver.dao.XSLTDBDAO;
 import es.uvigo.esei.dai.hybridserver.http.HTTPParseException;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequest;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequestMethod;
 import es.uvigo.esei.dai.hybridserver.http.HTTPResponse;
 import es.uvigo.esei.dai.hybridserver.http.HTTPResponseStatus;
-import utils.HTMLUtils;
+import es.uvigo.esei.dai.utils.HTMLUtils;
 
 public class ServiceThread implements Runnable {
 	private Socket cliente;
-	private DefaultPagesController controller;
-
-	public ServiceThread(Socket cliente, DefaultPagesController controller) {
+	private Properties properties;
+    private DefaultPagesController controller;
+	public ServiceThread(Socket cliente, Properties properties) {
 
 		this.cliente = cliente;
-		this.controller = controller;
+		this.properties = properties;
 	}
 
 	@Override
@@ -42,37 +49,42 @@ public class ServiceThread implements Runnable {
 
 				if (http_request.getResourceChain().equals("/")) {
 					http_response.setVersion(http_request.getHttpVersion());
-					http_response.setContent("<html> <head><title>Hybrid Server</title>"
-							+ "</head><body><p>Miguel Arias Perez</p><p>Victor Otero Cabaleiro</p><h1>Hybrid Server</h1> <a href=\"/html\">html</a></body></html>");
+					http_response.setContent(HTMLUtils.DEFAULT_PAGE);
 					http_response.print(wr);
 
 				} else {
-					if (!http_request.getResourceName().equals("html"))
-						throw new BadRequestException("The resource names doest not match html or any valid resource");
+					if (!http_request.getResourceName().equals("html") || !http_request.getResourceName().equals("xml")
+							|| !http_request.getResourceName().equals("xsd")
+							|| !http_request.getResourceName().equals("xslt"))
 
-					switch (method) {
+						throw new BadRequestException("The resource names doest not match html or any valid resource");
+                   
+					String resource_name = http_request.getResourceName();
+					this.controller=getController(this.properties,resource_name );
+				
+                    switch (method) {
 
 					case GET:
 						if (!http_request.getResourceParameters().containsKey("uuid")) {
 							web_content = HTMLUtils.generateHTMLWebs(controller.webList());
 							http_response.setContent(web_content);
-
+							http_response.putParameter("Content-Type","text/html");
 						} else {
 
 							try {
 								uuid = http_request.getResourceParameters().get("uuid");
 								web_content = controller.getWeb(uuid);
 								http_response.setContent(web_content);
-								
+
 							} catch (NotFoundException e) {
 
-			
 								http_response.setStatus(HTTPResponseStatus.S404);
-							
-							}
 
+							}
+							http_response.setContentType(resource_name);
 						}
 						http_response.setVersion(http_request.getHttpVersion());
+						
 						http_response.print(wr);
 
 						break;
@@ -83,10 +95,10 @@ public class ServiceThread implements Runnable {
 							if (http_request.getContentLength() == 0)
 								throw new BadRequestException("The content is empty");
 							if (http_request.getResourceParameters().containsKey("html")) {
-								
-								String content = http_request.getResourceParameters().get("html");
+
+								String content = http_request.getResourceParameters().get(resource_name);
 								content = HTMLUtils.generateNewPageLink(controller.putPage(content));
-								http_response.putParameter("Content-Type","text/html");
+								http_response.setContentType(resource_name);
 								http_response.setContent(content);
 							} else {
 
@@ -95,11 +107,10 @@ public class ServiceThread implements Runnable {
 						} catch (BadRequestException e) {
 
 							http_response.setStatus(HTTPResponseStatus.S400);
-					
 
 						}
 						http_response.setVersion(http_request.getHttpVersion());
-						http_response.putParameter("Content-Type","text/html");
+						http_response.setContentType(resource_name);
 						http_response.print(wr);
 
 						break;
@@ -112,7 +123,6 @@ public class ServiceThread implements Runnable {
 
 								controller.delete(uuid);
 
-
 							} else {
 								throw new BadRequestException("There's no uuid parameter");
 							}
@@ -124,7 +134,6 @@ public class ServiceThread implements Runnable {
 							http_response.setStatus(HTTPResponseStatus.S400);
 						}
 						http_response.setVersion(http_request.getHttpVersion());
-						http_response.putParameter("Content-Type","text/html");
 						http_response.print(wr);
 
 						break;
@@ -159,5 +168,36 @@ public class ServiceThread implements Runnable {
 		}
 
 	}
+
+	private DefaultPagesController getController(Properties prop, String resource) {
+           DefaultPagesController controller;
+		switch (resource) {
+
+		case "html":
+            controller= new DefaultPagesController(new HTMLDBDAO(prop));
+			break;
+
+		case "xml":
+			controller= new DefaultPagesController(new XMLDBDAO(prop));
+			break;
+			
+		case "xsd":
+			controller= new DefaultPagesController(new XSDDBDAO(prop));
+			break;
+
+		case "xslt":
+			controller= new DefaultPagesController(new XSLTDBDAO(prop));
+			break;
+			
+		default:
+			  controller= new DefaultPagesController(new HTMLDBDAO(prop));
+				break;
+			
+
+		}
+
+		return controller;
+	}
+    
 
 }
