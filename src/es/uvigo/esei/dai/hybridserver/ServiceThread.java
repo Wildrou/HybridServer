@@ -20,6 +20,7 @@ import es.uvigo.esei.dai.hybridserver.http.HTTPRequest;
 import es.uvigo.esei.dai.hybridserver.http.HTTPRequestMethod;
 import es.uvigo.esei.dai.hybridserver.http.HTTPResponse;
 import es.uvigo.esei.dai.hybridserver.http.HTTPResponseStatus;
+import es.uvigo.esei.dai.hybridserver.http.MIME;
 import es.uvigo.esei.dai.utils.HTMLUtils;
 
 public class ServiceThread implements Runnable {
@@ -94,15 +95,29 @@ public class ServiceThread implements Runnable {
 						try {
 							if (http_request.getContentLength() == 0)
 								throw new BadRequestException("The content is empty");
-							if (http_request.getResourceParameters().containsKey("html")) {
-
-								String content = http_request.getResourceParameters().get(resource_name);
-								content = HTMLUtils.generateNewPageLink(controller.putPage(content));
-								http_response.setContentType(resource_name);
+							if (http_request.getResourceParameters().containsKey("html")
+									|| http_request.getResourceParameters().containsKey("xml") 
+									|| http_request.getResourceParameters().containsKey("xsd")
+									|| http_request.getResourceParameters().containsKey("xslt")
+									) {
+								String [] content_array= new String[2];
+								content_array[0]= http_request.getResourceParameters().get(resource_name);
+								if(http_request.getResourceName().equals("xslt")) {
+									if(!http_request.getResourceParameters().containsKey("xsd"))
+											throw new BadRequestException("Missing xsd parameter for xslt post");
+									if(!controller.getDAO().xsdExist(http_request.getResourceParameters().get("xsd")))
+									      throw new NotFoundException("There is no xsd matching the given uuid");
+									else{
+										content_array[1]=http_request.getResourceParameters().get("xsd");
+									}
+											
+								}
+								String content = HTMLUtils.generateNewPageLink(controller.putPage(content_array));
+								http_response.putParameter("Content-Type", MIME.TEXT_HTML.getMime());
 								http_response.setContent(content);
 							} else {
 
-								throw new BadRequestException("The resource name is not html");
+								throw new BadRequestException("The resource name is not a valid one");
 							}
 						} catch (BadRequestException e) {
 

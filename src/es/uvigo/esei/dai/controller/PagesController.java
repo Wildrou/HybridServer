@@ -14,7 +14,7 @@ public interface PagesController {
 	public  ArrayList<String> webList();
 	public   String createUuid();
 	public  void delete(String uuid) throws NotFoundException;
-	public  String  putPage(String content);
+	public  String  putPage(String [] content);
 	
 	
 

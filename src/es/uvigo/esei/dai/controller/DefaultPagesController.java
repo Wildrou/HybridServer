@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
+import es.uvigo.esei.dai.hybridserver.dao.XSLTDBDAO;
 
 public class DefaultPagesController implements PagesController {
 	private final PagesDAO dao;
@@ -45,8 +46,14 @@ public class DefaultPagesController implements PagesController {
 	}
 
 	@Override
-	public String putPage(String content) {
+	public String putPage(String [] content) {
 		
 		return this.dao.putPage(content);
+	}
+	
+	public XSLTDBDAO getDAO() {
+		
+		return (XSLTDBDAO) this.dao;
+		
 	}
 }

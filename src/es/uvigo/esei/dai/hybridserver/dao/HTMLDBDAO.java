@@ -117,13 +117,13 @@ public class HTMLDBDAO implements PagesDAO {
 	}
 	
 	@Override
-	public String  putPage(String content) {
+	public String  putPage(String []content) {
 		String uuid= createUuid();
 		String query = "INSERT INTO HTML VALUES (?,?)";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
-				statement.setString(2, content);
+				statement.setString(2, content[0]);
 				statement.executeUpdate();
 			}
 		} catch (SQLException e) {
