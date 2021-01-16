@@ -122,8 +122,8 @@ public class XMLConfigurationLoader {
             }
 
         }
-        Configuration conf = new Configuration(httpPort,numClients,webServiceURL,dbUser,dbPassword,dbURL,servers);
-		return null;
+        
+		return new Configuration(httpPort,numClients,webServiceURL,dbUser,dbPassword,dbURL,servers);
 	}
 }
 
