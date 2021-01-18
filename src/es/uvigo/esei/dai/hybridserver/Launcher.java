@@ -10,18 +10,16 @@ public class Launcher {
 	public static void main(String[] args) {
 
 		if (args.length == 1) {
-			try (InputStream frd = new FileInputStream(args[0])) {
-
-				Properties props = new Properties();
-				props.load(frd);
+			XMLConfigurationLoader configLoader = new XMLConfigurationLoader();
+			try {
+				Configuration config = configLoader.load(new File(args[0]));
+				new HybridServer(config).start();
 				
-				new HybridServer(props).start();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.err.println("Error reading the file");
+			}catch(Exception e) {
+				
+				System.out.println("Error while loading the configuration file");
+							
 			}
-
 		}else if(args.length ==0)
 		new HybridServer().start();
 		else

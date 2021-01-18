@@ -23,12 +23,12 @@ public class HybridServer {
 	private ExecutorService threadPool;
 	//private DefaultPagesController controller;
 	private final  int numClients;
-	private final Properties properties;
+	private final Configuration config;
 	
 	public HybridServer() {
 		this.numClients=50;
 		this.servicePort=8888;
-		this.properties=null;
+		this.config=null;
 		//this.controller= new DefaultPagesController(new HTMLDBDAO(null));
 		
 	
@@ -45,10 +45,11 @@ public class HybridServer {
 		
 	}*/
 
-	public HybridServer(Properties properties) {
-		this.numClients=Integer.parseInt(properties.getProperty("numClients"));
-		this.servicePort=Integer.parseInt(properties.getProperty("port"));
-		this.properties=properties;
+	
+	public HybridServer(Configuration config) {
+		this.numClients=config.getNumClients();
+		this.servicePort=config.getHttpPort();
+		this.config=config;
 		//this.controller= new DefaultPagesController(new HTMLDBDAO(properties));
 		
 		
@@ -69,7 +70,7 @@ public class HybridServer {
 					while (true) {
 						    Socket socket = serverSocket.accept();
 							if (stop) break;	 
-							  threadPool.execute(new ServiceThread(socket,properties));
+							  threadPool.execute(new ServiceThread(socket,config));
 							 
 						}
 					
@@ -87,7 +88,7 @@ public class HybridServer {
 		this.stop = true;
 		
 		try (Socket socket = new Socket("localhost", servicePort)) {
-			// Esta conexión se hace, simplemente, para "despertar" el hilo servidor
+			// Esta conexiÃ³n se hace, simplemente, para "despertar" el hilo servidor
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

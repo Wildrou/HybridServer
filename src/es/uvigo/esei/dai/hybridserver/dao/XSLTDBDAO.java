@@ -6,10 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.UUID;
 
-
+import es.uvigo.esei.dai.hybridserver.Configuration;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
 public class XSLTDBDAO implements PagesDAO {
@@ -18,11 +17,11 @@ public class XSLTDBDAO implements PagesDAO {
 	private final String db_user;
 	private final String db_password;
 
-	public XSLTDBDAO(Properties properties) {
-		if(properties != null) {
-			this.db_url = properties.getProperty("db.url");
-			this.db_user = properties.getProperty("db.user");
-			this.db_password = properties.getProperty("db.password");
+	public XSLTDBDAO(Configuration config) {
+		if(config != null) {
+			this.db_url = config.getDbURL();
+			this.db_user = config.getDbUser();
+			this.db_password = config.getDbPassword();
 			
 			}else {
 				this.db_url = "jdbc:mysql://localhost:3306/hstestdb";

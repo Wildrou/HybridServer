@@ -6,11 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.UUID;
 
-import javax.management.RuntimeErrorException;
-
+import es.uvigo.esei.dai.hybridserver.Configuration;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
 public class HTMLDBDAO implements PagesDAO {
@@ -19,11 +17,11 @@ public class HTMLDBDAO implements PagesDAO {
 	private final String db_user;
 	private final String db_password;
 
-	public HTMLDBDAO(Properties properties) {
-		if(properties != null) {
-			this.db_url = properties.getProperty("db.url");
-			this.db_user = properties.getProperty("db.user");
-			this.db_password = properties.getProperty("db.password");
+	public HTMLDBDAO(Configuration config) {
+		if(config != null) {
+			this.db_url = config.getDbURL();
+			this.db_user = config.getDbUser();
+			this.db_password = config.getDbPassword();
 			
 			}else {
 				this.db_url = "jdbc:mysql://localhost:3306/hstestdb";

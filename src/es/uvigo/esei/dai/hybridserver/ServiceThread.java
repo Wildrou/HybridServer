@@ -8,7 +8,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.Socket;
-import java.util.Properties;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
@@ -37,13 +36,13 @@ import es.uvigo.esei.dai.utils.HTMLUtils;
 
 public class ServiceThread implements Runnable {
 	private Socket cliente;
-	private Properties properties;
+	private Configuration config;
 	private DefaultPagesController controller;
 
-	public ServiceThread(Socket cliente, Properties properties) {
+	public ServiceThread(Socket cliente, Configuration config) {
 
 		this.cliente = cliente;
-		this.properties = properties;
+		this.config = config;
 	}
 
 	@Override
@@ -75,7 +74,7 @@ public class ServiceThread implements Runnable {
 						throw new BadRequestException("The resource names doest not match html or any valid resource");
 
 					String resource_name = http_request.getResourceName();
-					this.controller = getController(this.properties, resource_name);
+					this.controller = getController(this.config, resource_name);
 
 					switch (method) {
 
@@ -231,28 +230,28 @@ public class ServiceThread implements Runnable {
 
 	}
 
-	private DefaultPagesController getController(Properties prop, String resource) {
+	private DefaultPagesController getController(Configuration config, String resource) {
 		DefaultPagesController controller;
 		switch (resource) {
 
 		case "html":
-			controller = new DefaultPagesController(new HTMLDBDAO(prop));
+			controller = new DefaultPagesController(new HTMLDBDAO(config));
 			break;
 
 		case "xml":
-			controller = new DefaultPagesController(new XMLDBDAO(prop));
+			controller = new DefaultPagesController(new XMLDBDAO(config));
 			break;
 
 		case "xsd":
-			controller = new DefaultPagesController(new XSDDBDAO(prop));
+			controller = new DefaultPagesController(new XSDDBDAO(config));
 			break;
 
 		case "xslt":
-			controller = new DefaultPagesController(new XSLTDBDAO(prop));
+			controller = new DefaultPagesController(new XSLTDBDAO(config));
 			break;
 
 		default:
-			controller = new DefaultPagesController(new HTMLDBDAO(prop));
+			controller = new DefaultPagesController(new HTMLDBDAO(config));
 			break;
 
 		}
