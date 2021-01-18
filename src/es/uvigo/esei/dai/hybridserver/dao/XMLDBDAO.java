@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
 
-
+import es.uvigo.esei.dai.entidades.XSLT;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
 public class XMLDBDAO implements PagesDAO {
@@ -132,4 +132,41 @@ public class XMLDBDAO implements PagesDAO {
 		return uuid;
 	}
 
+	public XSLT getXSLT(String uuid) throws NotFoundException {
+		String query = "SELECT * FROM XSLT WHERE uuid LIKE ?";
+		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
+			try(PreparedStatement statement = connection.prepareStatement(query)){
+				statement.setString(1, uuid);
+				try(ResultSet result = statement.executeQuery()){
+					if(result.next()) {
+						return new XSLT(result.getString("content"),result.getString("xsd"));
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+			
+		}
+		throw new NotFoundException("No webs found by the uuid specified");
+	}
+	
+	public String getWeb_XSD(String uuid) throws NotFoundException {
+		String query = "SELECT * FROM XSD WHERE uuid LIKE ?";
+		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
+			try(PreparedStatement statement = connection.prepareStatement(query)){
+				statement.setString(1, uuid);
+				try(ResultSet result = statement.executeQuery()){
+					if(result.next()) {
+						return result.getString("content");
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+			
+		}
+		throw new NotFoundException("No webs found by the uuid specified");
+	}
 }
