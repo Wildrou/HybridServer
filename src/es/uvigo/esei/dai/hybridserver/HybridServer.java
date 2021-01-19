@@ -23,13 +23,15 @@ public class HybridServer {
 	private ExecutorService threadPool;
 	//private DefaultPagesController controller;
 	private final  int numClients;
-	private final Configuration config;
+	//private final Configuration config;
+	
+	private final Properties properties;
 	
 	public HybridServer() {
 		this.numClients=50;
 		this.servicePort=8888;
-		this.config=null;
-		//this.controller= new DefaultPagesController(new HTMLDBDAO(null));
+		//this.config=null;
+		this.properties=null;
 		
 	
 		
@@ -45,15 +47,22 @@ public class HybridServer {
 		
 	}*/
 
+	public HybridServer(Properties prop) {
+		this.numClients=Integer.parseInt(prop.getProperty("numClients"));
+		this.servicePort=Integer.parseInt(prop.getProperty("port"));
+		this.properties=prop;
+		
+		
+	}
 	
-	public HybridServer(Configuration config) {
+	/*public HybridServer(Configuration config) {
 		this.numClients=config.getNumClients();
 		this.servicePort=config.getHttpPort();
 		this.config=config;
 		//this.controller= new DefaultPagesController(new HTMLDBDAO(properties));
 		
 		
-	}
+	}*/
 
 	public int getPort() {
 		return servicePort;
@@ -70,7 +79,7 @@ public class HybridServer {
 					while (true) {
 						    Socket socket = serverSocket.accept();
 							if (stop) break;	 
-							  threadPool.execute(new ServiceThread(socket,config));
+							  threadPool.execute(new ServiceThread(socket,properties));
 							 
 						}
 					
