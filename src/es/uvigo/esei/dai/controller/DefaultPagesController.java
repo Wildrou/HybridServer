@@ -89,9 +89,26 @@ public class DefaultPagesController implements PagesController {
 		return this.dao.putPage(content);
 	}
 	
-	public XSLTDBDAO getDAO() {
-		
-		return (XSLTDBDAO) this.dao;
+	public String getXSDUuid(String uuid) {
+		String uuid_xsd;
+		uuid_xsd= ((XSLTDBDAO)this.dao).getXsd(uuid);
+	
+	
+	
+		if (!this.serverConfigList.isEmpty() && uuid_xsd == null) {
+            try {
+                HybridServerClient ws = new HybridServerClient(this.serverConfigList);
+                List<HybridServerService> hybridServerServiceList = ws.getServers();
+                for (HybridServerService server : hybridServerServiceList) {
+                    uuid_xsd = server.getXSD(uuid);
+                    if(uuid_xsd != null)
+                    	return uuid_xsd;
+                }
+            } catch (MalformedURLException e) {
+                System.err.println("Malformed Url");
+            }
+		}
+		return uuid_xsd;
 		
 	}
 	
