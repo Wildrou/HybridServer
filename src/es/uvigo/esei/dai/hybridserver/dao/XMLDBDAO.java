@@ -175,4 +175,12 @@ public class XMLDBDAO implements PagesDAO {
 		}
 		throw new NotFoundException("No webs found by the uuid specified");
 	}
+
+	@Override
+	public String getContentType() {
+		// TODO Auto-generated method stub
+		return "xml";
+	}
+	
+	
 }

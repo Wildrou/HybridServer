@@ -136,4 +136,9 @@ public class XSDDBDAO implements PagesDAO {
 		return uuid;
 	}
 
+	@Override
+	public String getContentType() {
+		return "xsd";
+	}
+
 }

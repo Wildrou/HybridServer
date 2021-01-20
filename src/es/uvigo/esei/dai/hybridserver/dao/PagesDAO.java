@@ -13,6 +13,7 @@ public interface PagesDAO {
 	public   String createUuid();
 	public  void delete(String uuid) throws NotFoundException;
 	public  String  putPage(String [] content);
+	public String getContentType();
 	
 	
 	

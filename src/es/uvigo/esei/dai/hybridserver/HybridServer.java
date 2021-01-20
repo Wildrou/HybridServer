@@ -12,8 +12,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.ws.Endpoint;
+
 import es.uvigo.esei.dai.controller.*;
 import es.uvigo.esei.dai.hybridserver.dao.*;
+import es.uvigo.esei.dai.webservices.DefaultHybridServerService;
 
 
 public class HybridServer {
@@ -23,6 +26,8 @@ public class HybridServer {
 	private ExecutorService threadPool;
 	private final  int numClients;
 	private final Configuration config;
+	private String webService;
+	private Endpoint endpnt;
 	//private final Properties properties;
 	
 	public HybridServer() {
@@ -57,6 +62,7 @@ public class HybridServer {
 		this.numClients=config.getNumClients();
 		this.servicePort=config.getHttpPort();
 		this.config=config;
+		this.webService= config.getWebServiceURL();
 		//this.controller= new DefaultPagesController(new HTMLDBDAO(properties));
 		
 		
@@ -67,6 +73,9 @@ public class HybridServer {
 	}
 	
 	public void start() {
+		if(this.webService != null) {
+			this.endpnt = Endpoint.publish(this.webService, new DefaultHybridServerService(this.config));
+		}
 		this.serverThread = new Thread() {
 			@Override
 			public void run() {
@@ -114,5 +123,7 @@ public class HybridServer {
 		  e.printStackTrace();
 		}
 		this.serverThread = null;
+		
+		this.endpnt.stop();
 	}
 }

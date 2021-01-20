@@ -163,7 +163,7 @@ public class ServiceThread implements Runnable {
 								if (http_request.getResourceName().equals("xslt")) {
 									if (!http_request.getResourceParameters().containsKey("xsd"))
 										throw new BadRequestException("Missing xsd parameter for xslt post");
-									if (!controller.getDAO().xsdExist(http_request.getResourceParameters().get("xsd")))
+									if (controller.getDAO().getXsd(http_request.getResourceParameters().get("xsd")) == null)
 										throw new NotFoundException("There is no xsd matching the given uuid");
 									else {
 										content_array[1] = http_request.getResourceParameters().get("xsd");
