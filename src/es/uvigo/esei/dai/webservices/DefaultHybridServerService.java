@@ -13,7 +13,7 @@ import es.uvigo.esei.dai.hybridserver.dao.XSDDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XSLTDBDAO;
 
 
-@WebService(endpointInterface ="es.uvigo.esei.dai.hybridserver.webservices.HybridServerService", targetNamespace = "http://hybridserver.dai.esei.uvigo.es/", serviceName ="HybridServerService")
+@WebService(endpointInterface ="es.uvigo.esei.dai.webservices.HybridServerService", targetNamespace = "http://hybridserver.dai.esei.uvigo.es/", serviceName ="HybridServerService")
 public class DefaultHybridServerService implements HybridServerService {
 
 	private Configuration config;
