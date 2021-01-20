@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import es.uvigo.esei.dai.entidades.XSLT;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 import es.uvigo.esei.dai.hybridserver.ServerConfiguration;
 import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
@@ -25,15 +26,19 @@ public class DefaultPagesController implements PagesController {
 		this.serverConfigList= configList;
 	} 
 	@Override
-	public String getWeb(String uuid) throws NotFoundException {
+	public String getWeb(String uuid){
 		
 		String content = this.dao.getWeb(uuid);
+		System.out.println("El contenido es de local"+ content);
 		if (!this.serverConfigList.isEmpty() && content== null) {
             try {
                 HybridServerClient ws = new HybridServerClient(this.serverConfigList);
                 List<HybridServerService> hybridServerServiceList = ws.getServers();
                 for (HybridServerService server : hybridServerServiceList) {
                     content= server.getContent(uuid, this.dao.getContentType());
+                    System.out.println("El contenido de web es: "+ content);
+                    if(content != null)
+                    	return content;
                 }
             } catch (MalformedURLException e) {
                 System.err.println("Malformed Url");
@@ -112,9 +117,50 @@ public class DefaultPagesController implements PagesController {
 		
 	}
 	
-	public XMLDBDAO getDAO_XML() {
+	public XSLT getXSLT(String xslt_uuid) {
+	
+		XSLT xslt= ((XMLDBDAO)this.dao).getXSLT(xslt_uuid);
+		if (!this.serverConfigList.isEmpty() && xslt == null) {
+            try {
+                HybridServerClient ws = new HybridServerClient(this.serverConfigList);
+                List<HybridServerService> hybridServerServiceList = ws.getServers();
+                for (HybridServerService server : hybridServerServiceList) {
+                    xslt = server.getXSLT(xslt_uuid);
+                    if(xslt != null)
+                    	return xslt;
+                }
+            } catch (MalformedURLException e) {
+                System.err.println("Malformed Url");
+            }
+		}
+		if(xslt== null)
+			return null;
+		return xslt;
 		
-		return (XMLDBDAO) this.dao;
+	}
+	
+	public String getXSD(String uuid) {
+		String content;
+		content= ((XMLDBDAO)this.dao).getWeb_XSD(uuid);
+		
+		
+		if (!this.serverConfigList.isEmpty() && content == null) {
+            try {
+                HybridServerClient ws = new HybridServerClient(this.serverConfigList);
+                List<HybridServerService> hybridServerServiceList = ws.getServers();
+                for (HybridServerService server : hybridServerServiceList) {
+                    content = server.getXSD(uuid);
+                    if(content != null)
+                    	return content;
+                }
+            } catch (MalformedURLException e) {
+                System.err.println("Malformed Url");
+            }
+		
+		}
+		
+		return content;
+		
 		
 	}
 	

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.jws.WebService;
 
+import es.uvigo.esei.dai.entidades.XSLT;
 import es.uvigo.esei.dai.hybridserver.Configuration;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 import es.uvigo.esei.dai.hybridserver.dao.HTMLDBDAO;
@@ -33,13 +34,7 @@ public class DefaultHybridServerService implements HybridServerService {
 	@Override
 	public String getContent(String uuid, String resource_type) {
 		String content;
-		try {
-			content = getDAO(config, resource_type).getWeb(uuid);
-
-		} catch (NotFoundException e) {
-             System.err.println("Can not find the resource with uuid : "+uuid);
-			return null;
-		}
+		content = getDAO(config, resource_type).getWeb(uuid);
 
 		return content;
 	}
@@ -47,7 +42,15 @@ public class DefaultHybridServerService implements HybridServerService {
 	@Override
 	public String getXSD(String uuid) {
          
-		return  new XSLTDBDAO(this.config).getXsd(uuid);
+		return  new XMLDBDAO(this.config).getWeb_XSD(uuid);
+	}
+	
+	
+
+	@Override
+	public XSLT getXSLT(String uuid) {
+		
+		return new XMLDBDAO(this.config).getXSLT(uuid);
 	}
 
 	private PagesDAO getDAO(Configuration config, String resource) {

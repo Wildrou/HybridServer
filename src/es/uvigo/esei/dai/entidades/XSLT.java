@@ -3,6 +3,15 @@ package es.uvigo.esei.dai.entidades;
 public class XSLT {
 	String content;
 	String uuid_xsd;
+	
+	
+	public XSLT(String content, String uuid_xsd) {
+		this.content = content;
+		this.uuid_xsd = uuid_xsd;
+	}
+	
+	
+	
 	public String getContent() {
 		return content;
 	}
@@ -13,11 +22,6 @@ public class XSLT {
 		return uuid_xsd;
 	}
 	public void setUuid_xsd(String uuid_xsd) {
-		this.uuid_xsd = uuid_xsd;
-	}
-	public XSLT(String content, String uuid_xsd) {
-		super();
-		this.content = content;
 		this.uuid_xsd = uuid_xsd;
 	}
 	

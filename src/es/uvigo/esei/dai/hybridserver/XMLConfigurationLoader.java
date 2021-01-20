@@ -73,8 +73,7 @@ public class XMLConfigurationLoader {
             			webServiceURL = connItem.getTextContent();
             		else if(connItem.getNodeName().equals("numClients")) {
             			numClients = Integer.parseInt(connItem.getTextContent());
-            		System.out.println("El numero de conitem es"+connItem.getTextContent());
-            		System.out.println("El numero de clientes es"+numClients);
+        
             		}
             	}
             }
@@ -96,14 +95,12 @@ public class XMLConfigurationLoader {
             }
             
             else if (confItem.getNodeName().equals("servers")) {
-            	System.out.println("Entras o no mijo");
+         
             	NodeList serversChildren = confItem.getChildNodes();
-            	System.out.println("Longitud de nenes "+serversChildren.getLength());
             	for (int j = 0; j < serversChildren.getLength(); j++) {
             		Node serverItem = serversChildren.item(j);
             		if(serverItem.getNodeName().equals("server")) {
             		NamedNodeMap serverAttributes= serverItem.getAttributes();
-            		System.out.println("Valor 1: "+serverAttributes.getNamedItem("wsdl").getNodeValue());
             		servers.add(new ServerConfiguration(serverAttributes.getNamedItem("name").getNodeValue(),
             				serverAttributes.getNamedItem("wsdl").getNodeValue(),
             				serverAttributes.getNamedItem("namespace").getNodeValue(),

@@ -38,7 +38,7 @@ public class XMLDBDAO implements PagesDAO {
 	}
 
 	@Override
-	public String getWeb(String uuid) throws NotFoundException {
+	public String getWeb(String uuid){
 		String query = "SELECT * FROM XML WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
@@ -54,7 +54,7 @@ public class XMLDBDAO implements PagesDAO {
 			throw new RuntimeException(e);
 			
 		}
-		throw new NotFoundException("No webs found by the uuid specified");
+		return null;
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class XMLDBDAO implements PagesDAO {
 		return uuid;
 	}
 
-	public XSLT getXSLT(String uuid) throws NotFoundException {
+	public XSLT getXSLT(String uuid){
 		String query = "SELECT * FROM XSLT WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
@@ -154,10 +154,10 @@ public class XMLDBDAO implements PagesDAO {
 			throw new RuntimeException(e);
 			
 		}
-		throw new NotFoundException("No webs found by the uuid specified");
+		return null;
 	}
 	
-	public String getWeb_XSD(String uuid) throws NotFoundException {
+	public String getWeb_XSD(String uuid){
 		String query = "SELECT * FROM XSD WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
@@ -173,7 +173,7 @@ public class XMLDBDAO implements PagesDAO {
 			throw new RuntimeException(e);
 			
 		}
-		throw new NotFoundException("No webs found by the uuid specified");
+	  return null;
 	}
 
 	@Override

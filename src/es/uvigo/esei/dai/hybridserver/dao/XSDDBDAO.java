@@ -36,7 +36,7 @@ public class XSDDBDAO implements PagesDAO {
 	}
 
 	@Override
-	public String getWeb(String uuid) throws NotFoundException {
+	public String getWeb(String uuid) {
 		String query = "SELECT * FROM XSD WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
@@ -52,7 +52,7 @@ public class XSDDBDAO implements PagesDAO {
 			throw new RuntimeException(e);
 			
 		}
-		throw new NotFoundException("No webs found by the uuid specified");
+		return null;
 	}
 
 	@Override

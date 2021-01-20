@@ -95,8 +95,14 @@ public class ServiceThread implements Runnable {
 									String xslt_uuid = http_request.getResourceParameters().get("xslt");
 
 									String web_content_uuid = controller.getWeb(uuid);
-									XSLT xslt = controller.getDAO_XML().getXSLT(xslt_uuid);
-									String web_content_xsd = controller.getDAO_XML().getWeb_XSD(xslt.getUuid_xsd());
+									if(web_content_uuid == null)
+										throw new NotFoundException("Can not find any resource by the specified uuid");
+									XSLT xslt = controller.getXSLT(xslt_uuid);
+		                             if(xslt == null)
+		                            	 throw new NotFoundException("Can not find any xslt by the specified uuid");
+									String web_content_xsd = controller.getXSD(xslt.getUuid_xsd());
+									if(web_content_xsd== null)
+										throw new NotFoundException("Can not find the specified xsd");
 
 									StringReader input = new StringReader(web_content_uuid);
 									StringReader xmlReader = new StringReader(web_content_uuid);
@@ -123,7 +129,8 @@ public class ServiceThread implements Runnable {
 
 
 								} catch (NotFoundException e) {
-
+									System.out.println("Entras o que bro");
+									System.err.println("El error es : "+e);
 									http_response.setStatus(HTTPResponseStatus.S404);
 									
 								}
@@ -132,9 +139,11 @@ public class ServiceThread implements Runnable {
 								try {
 								uuid = http_request.getResourceParameters().get("uuid");
 								web_content = controller.getWeb(uuid);
-								http_response.setContent(web_content);
-								System.out.println("El contenido es en el get: "+web_content);
+								if(web_content == null)
+									throw new NotFoundException("Can not find any resource by the specified uuid");
+								http_response.setContent(web_content);			
 								}catch(NotFoundException e) {
+									System.out.println("Puta");
 									http_response.setStatus(HTTPResponseStatus.S404);
 									
 								}
