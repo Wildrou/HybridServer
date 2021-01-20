@@ -251,23 +251,23 @@ public class ServiceThread implements Runnable {
 		switch (resource) {
 
 		case "html":
-			controller = new DefaultPagesController(new HTMLDBDAO(config));
+			controller = new DefaultPagesController(new HTMLDBDAO(config),config.getServers());
 			break;
 
 		case "xml":
-			controller = new DefaultPagesController(new XMLDBDAO(config));
+			controller = new DefaultPagesController(new XMLDBDAO(config),config.getServers());
 			break;
 
 		case "xsd":
-			controller = new DefaultPagesController(new XSDDBDAO(config));
+			controller = new DefaultPagesController(new XSDDBDAO(config),config.getServers());
 			break;
 
 		case "xslt":
-			controller = new DefaultPagesController(new XSLTDBDAO(config));
+			controller = new DefaultPagesController(new XSLTDBDAO(config),config.getServers());
 			break;
 
 		default:
-			controller = new DefaultPagesController(new HTMLDBDAO(config));
+			controller = new DefaultPagesController(new HTMLDBDAO(config),config.getServers());
 			break;
 
 		}
