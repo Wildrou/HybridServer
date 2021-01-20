@@ -37,14 +37,15 @@ import es.uvigo.esei.dai.utils.HTMLUtils;
 
 public class ServiceThread implements Runnable {
 	private Socket cliente;
-	//private Configuration config;
-	private Properties properties;
+	private Configuration config;
+	//private Properties properties;
 	private DefaultPagesController controller;
 
-	public ServiceThread(Socket cliente, Properties prop) {
+	public ServiceThread(Socket cliente, Configuration config) {
 
 		this.cliente = cliente;
-		this.properties = prop;
+		//this.properties = prop;
+		this.config=config;
 	}
 
 	@Override
@@ -77,7 +78,7 @@ public class ServiceThread implements Runnable {
 						throw new BadRequestException("The resource names doest not match html or any valid resource");
 
 					String resource_name = http_request.getResourceName();
-					this.controller = getController(this.properties, resource_name);
+					this.controller = getController(this.config, resource_name);
 
 					switch (method) {
 
@@ -85,9 +86,9 @@ public class ServiceThread implements Runnable {
 						if (!http_request.getResourceParameters().containsKey("uuid")) {
 							web_content = HTMLUtils.generateHTMLWebs(controller.webList());
 							http_response.setContent(web_content);
-							http_response.putParameter("Content-Type", "text/html");
+							http_response.setContentType("html");
 						} else {
-							if (resource_name.equals("xml") && http_request.getResourceParameters().containsKey("uuid")
+							if (resource_name.equals("xml")
 									&& http_request.getResourceParameters().containsKey("xslt")) {
 								try {
 									uuid = http_request.getResourceParameters().get("uuid");
@@ -98,6 +99,7 @@ public class ServiceThread implements Runnable {
 									String web_content_xsd = controller.getDAO_XML().getWeb_XSD(xslt.getUuid_xsd());
 
 									StringReader input = new StringReader(web_content_uuid);
+									StringReader xmlReader = new StringReader(web_content_uuid);
 									StringReader xsltReader = new StringReader(xslt.getContent());
 									StringReader xsdReader = new StringReader(web_content_xsd);
 									
@@ -108,9 +110,9 @@ public class ServiceThread implements Runnable {
 												.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 										Schema schema = schemaFactory.newSchema(new StreamSource(xsdReader));
 										Validator validator = schema.newValidator();
-										validator.validate(new StreamSource(input));
+										validator.validate(new StreamSource(xmlReader));
 									} catch (SAXException e) {
-										http_response.setStatus(HTTPResponseStatus.S404);
+										http_response.setStatus(HTTPResponseStatus.S400);
 									}
 									TransformerFactory tFactory = TransformerFactory.newInstance();
 									Transformer transformer = tFactory.newTransformer(new StreamSource(xsltReader));
@@ -123,20 +125,26 @@ public class ServiceThread implements Runnable {
 								} catch (NotFoundException e) {
 
 									http_response.setStatus(HTTPResponseStatus.S404);
-
+									
 								}
 							}
 							else {
+								try {
 								uuid = http_request.getResourceParameters().get("uuid");
 								web_content = controller.getWeb(uuid);
-								
+								http_response.setContent(web_content);
+								System.out.println("El contenido es en el get: "+web_content);
+								}catch(NotFoundException e) {
+									http_response.setStatus(HTTPResponseStatus.S404);
+									
+								}
 								http_response.setContentType(resource_name);
 							}
-							http_response.setVersion(http_request.getHttpVersion());
-
-							http_response.print(wr);
+						
 
 						}
+						http_response.setVersion(http_request.getHttpVersion());
+						http_response.print(wr);
 
 						break;
 
@@ -151,6 +159,7 @@ public class ServiceThread implements Runnable {
 									|| http_request.getResourceParameters().containsKey("xslt")) {
 								String[] content_array = new String[2];
 								content_array[0] = http_request.getResourceParameters().get(resource_name);
+								System.out.println("El contenido es: "+http_request.getContent());
 								if (http_request.getResourceName().equals("xslt")) {
 									if (!http_request.getResourceParameters().containsKey("xsd"))
 										throw new BadRequestException("Missing xsd parameter for xslt post");
@@ -161,7 +170,7 @@ public class ServiceThread implements Runnable {
 									}
 
 								}
-								String content = HTMLUtils.generateNewPageLink(controller.putPage(content_array));
+								String content = HTMLUtils.generateNewPageLink(controller.putPage(content_array),resource_name);
 								http_response.putParameter("Content-Type", MIME.TEXT_HTML.getMime());
 								http_response.setContent(content);
 							} else {
@@ -172,6 +181,9 @@ public class ServiceThread implements Runnable {
 
 							http_response.setStatus(HTTPResponseStatus.S400);
 
+						}catch (NotFoundException e) {
+							http_response.setStatus(HTTPResponseStatus.S404);
+							
 						}
 						http_response.setVersion(http_request.getHttpVersion());
 						http_response.setContentType(resource_name);
@@ -227,34 +239,35 @@ public class ServiceThread implements Runnable {
 
 		} catch (HTTPParseException e) {
 			e.printStackTrace();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private DefaultPagesController getController(Properties prop, String resource) {
+	private DefaultPagesController getController(Configuration config, String resource) {
 		DefaultPagesController controller;
 		switch (resource) {
 
 		case "html":
-			controller = new DefaultPagesController(new HTMLDBDAO(prop));
+			controller = new DefaultPagesController(new HTMLDBDAO(config));
 			break;
 
 		case "xml":
-			controller = new DefaultPagesController(new XMLDBDAO(prop));
+			controller = new DefaultPagesController(new XMLDBDAO(config));
 			break;
 
 		case "xsd":
-			controller = new DefaultPagesController(new XSDDBDAO(prop));
+			controller = new DefaultPagesController(new XSDDBDAO(config));
 			break;
 
 		case "xslt":
-			controller = new DefaultPagesController(new XSLTDBDAO(prop));
+			controller = new DefaultPagesController(new XSLTDBDAO(config));
 			break;
 
 		default:
-			controller = new DefaultPagesController(new HTMLDBDAO(prop));
+			controller = new DefaultPagesController(new HTMLDBDAO(config));
 			break;
 
 		}

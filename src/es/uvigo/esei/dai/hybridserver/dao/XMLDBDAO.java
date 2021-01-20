@@ -20,11 +20,14 @@ public class XMLDBDAO implements PagesDAO {
 	private final String db_user;
 	private final String db_password;
 
-	public XMLDBDAO(Properties properties) {
-		if(properties != null) {
-			this.db_url = properties.getProperty("db.url");
+	public XMLDBDAO(Configuration config) {
+		if(config != null) {
+		/*	this.db_url = properties.getProperty("db.url");
 			this.db_user = properties.getProperty("db.user");
-			this.db_password = properties.getProperty("db.password");
+			this.db_password = properties.getProperty("db.password");*/
+			   this.db_url = config.getDbURL();
+	            this.db_user = config.getDbUser();
+	            this.db_password = config.getDbPassword();
 			
 			}else {
 				this.db_url = "jdbc:mysql://localhost:3306/hstestdb";
@@ -119,6 +122,7 @@ public class XMLDBDAO implements PagesDAO {
 	
 	@Override
 	public String  putPage(String [] content) {
+		System.out.println("El contenido es en el dao: "+content[0]);
 		String uuid= createUuid();
 		String query = "INSERT INTO XML VALUES (?,?)";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){

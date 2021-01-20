@@ -16,6 +16,7 @@ public class HTTPResponse {
 	private String content;
 	private Map<String, String> parameters;
 
+
 	public HTTPResponse() {
 		this.status =HTTPResponseStatus.S200;
 		this.version = "";
@@ -94,8 +95,12 @@ public class HTTPResponse {
 			
 			pw.write("\r\n");
              if(!this.listParameters().isEmpty()) {
-			pw.write(this.listParameters().toString());
-			pw.write("\r\n");
+            	 
+            	 for(String s: this.listParameters()) {
+            		 pw.write(s);
+            		 pw.write("\r\n");
+            		  
+            	 }
              }
 			if (this.content.length() != 0) {
 				pw.write("Content-Length: "+this.content.length());

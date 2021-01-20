@@ -27,6 +27,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -36,37 +37,24 @@ import org.xml.sax.SAXException;
 public class XMLConfigurationLoader {
 	public Configuration load(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setValidating(true);
-		factory.setNamespaceAware(true);
-		factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		builder.setErrorHandler(new SimpleErrorHandler());
-		
-		int httpPort = 0;
-		int numClients = 0;
-		String webServiceURL = null;
-		
-		String dbUser = null;
-		String dbPassword = null;
-		String dbURL = null;
-		
-		List<ServerConfiguration> servers = new LinkedList<>();
+        factory.setValidating(true);
+        factory.setNamespaceAware(true);
+        factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-		
-		NodeList rootNodes = builder.parse(new File("configuration.xml")).getChildNodes();
-		Element configurationElement = null;
-		
-		for (int i = 0; i < rootNodes.getLength(); i++) {
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new SimpleErrorHandler());
+        Document document = builder.parse(xmlFile);
+        int httpPort = 0;
+        String webServiceURL = null;
+        int numClients = 0;
+        String dbUser = null;
+        String dbPassword = null;
+        String dbURL = null;
+        List<ServerConfiguration> servers = new LinkedList<ServerConfiguration>();
 
-            Node item = rootNodes.item(i);
-
-            if (item.getNodeName().equals("configuration")) {
-            	configurationElement = (Element) item;
-                break;
-            }
-        }
-		
-		NodeList configurationChildren = configurationElement.getChildNodes();
+        Element configurationElement = (Element) document.getElementsByTagName("configuration").item(0);
+        NodeList configurationChildren = configurationElement.getChildNodes();
 
         for (int i = 0; i < configurationChildren.getLength(); i++) {
 
@@ -77,14 +65,17 @@ public class XMLConfigurationLoader {
             	NodeList connectionsChildren = confItem.getChildNodes();
             	
             	for (int j = 0; j < connectionsChildren.getLength(); j++) {
-            		Node connItem = connectionsChildren.item(i);
+            		Node connItem = connectionsChildren.item(j);
             		
             		if(connItem.getNodeName().equals("http"))
             			httpPort = Integer.parseInt(connItem.getTextContent());
             		else if(connItem.getNodeName().equals("webservice"))
             			webServiceURL = connItem.getTextContent();
-            		else if(connItem.getNodeName().equals("numClients"))
-            			httpPort = Integer.parseInt(connItem.getTextContent());
+            		else if(connItem.getNodeName().equals("numClients")) {
+            			numClients = Integer.parseInt(connItem.getTextContent());
+            		System.out.println("El numero de conitem es"+connItem.getTextContent());
+            		System.out.println("El numero de clientes es"+numClients);
+            		}
             	}
             }
             
@@ -93,7 +84,7 @@ public class XMLConfigurationLoader {
             	NodeList databaseChildren = confItem.getChildNodes();
             	
             	for (int j = 0; j < databaseChildren.getLength(); j++) {
-            		Node databaseItem = databaseChildren.item(i);
+            		Node databaseItem = databaseChildren.item(j);
             		
             		if(databaseItem.getNodeName().equals("user"))
             			dbUser = databaseItem.getTextContent();
@@ -105,19 +96,20 @@ public class XMLConfigurationLoader {
             }
             
             else if (confItem.getNodeName().equals("servers")) {
-            	
+            	System.out.println("Entras o no mijo");
             	NodeList serversChildren = confItem.getChildNodes();
-            	
+            	System.out.println("Longitud de nenes "+serversChildren.getLength());
             	for (int j = 0; j < serversChildren.getLength(); j++) {
-            		Node serverItem = serversChildren.item(i);
-            		
+            		Node serverItem = serversChildren.item(j);
+            		if(serverItem.getNodeName().equals("server")) {
             		NamedNodeMap serverAttributes= serverItem.getAttributes();
-            		
-            		servers.add(new ServerConfiguration(serverAttributes.getNamedItem("name").getTextContent(),
-            				serverAttributes.getNamedItem("wsdl").getTextContent(),
-            				serverAttributes.getNamedItem("namespace").getTextContent(),
-            				serverAttributes.getNamedItem("service").getTextContent(),
-            				serverAttributes.getNamedItem("httpAddress").getTextContent()));
+            		System.out.println("Valor 1: "+serverAttributes.getNamedItem("wsdl").getNodeValue());
+            		servers.add(new ServerConfiguration(serverAttributes.getNamedItem("name").getNodeValue(),
+            				serverAttributes.getNamedItem("wsdl").getNodeValue(),
+            				serverAttributes.getNamedItem("namespace").getNodeValue(),
+            				serverAttributes.getNamedItem("service").getNodeValue(),
+            				serverAttributes.getNamedItem("httpAddress").getNodeValue()));
+            		}
             	}
             }
 
