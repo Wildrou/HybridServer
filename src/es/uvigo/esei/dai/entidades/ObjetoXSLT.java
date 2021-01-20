@@ -1,11 +1,11 @@
 package es.uvigo.esei.dai.entidades;
 
-public class XSLT {
+public class ObjetoXSLT {
 	String content;
 	String uuid_xsd;
 	
 	
-	public XSLT(String content, String uuid_xsd) {
+	public ObjetoXSLT(String content, String uuid_xsd) {
 		this.content = content;
 		this.uuid_xsd = uuid_xsd;
 	}

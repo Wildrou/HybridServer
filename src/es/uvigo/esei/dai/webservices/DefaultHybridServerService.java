@@ -4,9 +4,8 @@ import java.util.List;
 
 import javax.jws.WebService;
 
-import es.uvigo.esei.dai.entidades.XSLT;
+import es.uvigo.esei.dai.entidades.ObjetoXSLT;
 import es.uvigo.esei.dai.hybridserver.Configuration;
-import es.uvigo.esei.dai.hybridserver.NotFoundException;
 import es.uvigo.esei.dai.hybridserver.dao.HTMLDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XMLDBDAO;
@@ -48,11 +47,14 @@ public class DefaultHybridServerService implements HybridServerService {
 	
 
 	@Override
-	public XSLT getXSLT(String uuid) {
-		
-		return new XMLDBDAO(this.config).getXSLT(uuid);
+	public ObjetoXSLT getXSLT(String uuid) {
+		System.out.println("LLega amigos");
+		ObjetoXSLT pepino = new ObjetoXSLT("pepino","que flipas");
+		System.out.println("Esto es el pepino"+pepino.toString());
+		ObjetoXSLT xslt = new XMLDBDAO(this.config).getXSLT(uuid);
+		System.out.println("se ha liau que flaipas"+xslt.getContent());
+		return xslt;
 	}
-
 	private PagesDAO getDAO(Configuration config, String resource) {
 		PagesDAO dao;
 		switch (resource) {

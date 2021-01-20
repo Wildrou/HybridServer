@@ -22,7 +22,7 @@ import javax.xml.validation.Validator;
 import org.xml.sax.SAXException;
 
 import es.uvigo.esei.dai.controller.DefaultPagesController;
-import es.uvigo.esei.dai.entidades.XSLT;
+import es.uvigo.esei.dai.entidades.ObjetoXSLT;
 import es.uvigo.esei.dai.hybridserver.dao.HTMLDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XMLDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XSDDBDAO;
@@ -97,7 +97,7 @@ public class ServiceThread implements Runnable {
 									String web_content_uuid = controller.getWeb(uuid);
 									if(web_content_uuid == null)
 										throw new NotFoundException("Can not find any resource by the specified uuid");
-									XSLT xslt = controller.getXSLT(xslt_uuid);
+									ObjetoXSLT xslt = controller.getXSLT(xslt_uuid);
 		                             if(xslt == null)
 		                            	 throw new NotFoundException("Can not find any xslt by the specified uuid");
 									String web_content_xsd = controller.getXSD(xslt.getUuid_xsd());

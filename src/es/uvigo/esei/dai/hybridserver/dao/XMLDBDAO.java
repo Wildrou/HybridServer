@@ -11,7 +11,7 @@ import java.util.UUID;
 
 
 import es.uvigo.esei.dai.hybridserver.Configuration;
-import es.uvigo.esei.dai.entidades.XSLT;
+import es.uvigo.esei.dai.entidades.ObjetoXSLT;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
 public class XMLDBDAO implements PagesDAO {
@@ -138,14 +138,14 @@ public class XMLDBDAO implements PagesDAO {
 		return uuid;
 	}
 
-	public XSLT getXSLT(String uuid){
+	public ObjetoXSLT getXSLT(String uuid){
 		String query = "SELECT * FROM XSLT WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
 				try(ResultSet result = statement.executeQuery()){
 					if(result.next()) {
-						return new XSLT(result.getString("content"),result.getString("xsd"));
+						return new ObjetoXSLT(result.getString("content"),result.getString("xsd"));
 					}
 				}
 			}
