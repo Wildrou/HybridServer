@@ -1,0 +1,29 @@
+
+DROP DATABASE IF EXISTS hstestdb1;
+CREATE DATABASE hstestdb1;
+USE hstestdb1;
+
+CREATE TABLE HTML (
+ uuid CHAR(36) NOT NULL,
+ content TEXT NOT NULL,
+ PRIMARY KEY (uuid));
+
+CREATE TABLE XML (
+ uuid CHAR(36) NOT NULL,
+ content TEXT NOT NULL,
+  PRIMARY KEY (uuid));
+
+CREATE TABLE XSD (
+ uuid CHAR(36) NOT NULL,
+ content TEXT NOT NULL,
+  PRIMARY KEY (uuid));
+  
+CREATE TABLE XSLT (
+ uuid CHAR(36) NOT NULL,
+ content TEXT NOT NULL,
+ xsd CHAR(36),
+  PRIMARY KEY (uuid));
+
+GRANT ALL PRIVILEGES ON hstestdb1.* TO hsdb@'%';
+FLUSH PRIVILEGES;
+  
