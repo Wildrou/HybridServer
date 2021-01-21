@@ -5,7 +5,6 @@ import java.util.List;
 import javax.jws.WebService;
 
 import es.uvigo.esei.dai.entidades.Configuration;
-import es.uvigo.esei.dai.entidades.ObjetoXSLT;
 import es.uvigo.esei.dai.hybridserver.dao.HTMLDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XMLDBDAO;
@@ -48,7 +47,6 @@ public class DefaultHybridServerService implements HybridServerService {
 
 	@Override
 	public List<String> getXSLT(String uuid) {
-		System.out.println("El uuid del xslt es en DefaultServerService : "+uuid);
 		return  new XMLDBDAO(this.config).getXSLT(uuid);
 	}
 	private PagesDAO getDAO(Configuration config, String resource) {

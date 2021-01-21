@@ -46,7 +46,6 @@ public class ServiceThread implements Runnable {
 	public ServiceThread(Socket cliente, Configuration config) {
 
 		this.cliente = cliente;
-		//this.properties = prop;
 		this.config=config;
 	}
 
@@ -86,8 +85,7 @@ public class ServiceThread implements Runnable {
 
 					case GET:
 						if (!http_request.getResourceParameters().containsKey("uuid")) {
-							web_content = HTMLUtils.generateHTMLWebs(controller.webList());
-							System.out.println("Esto es el contenido del list"+web_content);
+							web_content = HTMLUtils.generateHTMLWebs(controller.webList(),resource_name);
 							http_response.setContent(web_content);
 							http_response.setContentType("html");
 						} else {

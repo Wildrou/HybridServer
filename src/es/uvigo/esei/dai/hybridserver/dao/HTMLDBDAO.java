@@ -19,30 +19,27 @@ public class HTMLDBDAO implements PagesDAO {
 	private final String db_password;
 
 	public HTMLDBDAO(Configuration config) {
-		if(config != null) {
-		/*	this.db_url = properties.getProperty("db.url");
-			this.db_user = properties.getProperty("db.user");
-			this.db_password = properties.getProperty("db.password");*/
-			   this.db_url = config.getDbURL();
-	            this.db_user = config.getDbUser();
-	            this.db_password = config.getDbPassword();
-			
-			}else {
-				this.db_url = "jdbc:mysql://localhost:3306/hstestdb";
-				this.db_user = "hsdb";
-				this.db_password = "hsdbpass";
-				
-			}
+		if (config != null) {
+			this.db_url = config.getDbURL();
+			this.db_user = config.getDbUser();
+			this.db_password = config.getDbPassword();
+
+		} else {
+			this.db_url = "jdbc:mysql://localhost:3306/hstestdb";
+			this.db_user = "hsdb";
+			this.db_password = "hsdbpass";
+
+		}
 	}
 
 	@Override
-	public String getWeb(String uuid){
+	public String getWeb(String uuid) {
 		String query = "SELECT * FROM HTML WHERE uuid LIKE ?";
-		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
-			try(PreparedStatement statement = connection.prepareStatement(query)){
+		try (Connection connection = DriverManager.getConnection(db_url, db_user, db_password)) {
+			try (PreparedStatement statement = connection.prepareStatement(query)) {
 				statement.setString(1, uuid);
-				try(ResultSet result = statement.executeQuery()){
-					if(result.next()) {
+				try (ResultSet result = statement.executeQuery()) {
+					if (result.next()) {
 						return result.getString("content");
 					}
 				}
@@ -50,7 +47,7 @@ public class HTMLDBDAO implements PagesDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
-			
+
 		}
 		return null;
 	}
@@ -58,11 +55,11 @@ public class HTMLDBDAO implements PagesDAO {
 	@Override
 	public boolean checkUuid(String uuid) {
 		String query = "SELECT * FROM HTML WHERE uuid LIKE ?";
-		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
-			try(PreparedStatement statement = connection.prepareStatement(query)){
+		try (Connection connection = DriverManager.getConnection(db_url, db_user, db_password)) {
+			try (PreparedStatement statement = connection.prepareStatement(query)) {
 				statement.setString(1, uuid);
-				try(ResultSet result = statement.executeQuery()){
-					if(result.next()) {
+				try (ResultSet result = statement.executeQuery()) {
+					if (result.next()) {
 						return true;
 					}
 				}
@@ -73,15 +70,15 @@ public class HTMLDBDAO implements PagesDAO {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public ArrayList<String> webList() {
 		String query = "SELECT uuid FROM HTML";
-		ArrayList<String> uuids= new ArrayList<>();
-		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
-			try(PreparedStatement statement = connection.prepareStatement(query)){
-				try(ResultSet result = statement.executeQuery()){
-					while(result.next()) {
+		ArrayList<String> uuids = new ArrayList<>();
+		try (Connection connection = DriverManager.getConnection(db_url, db_user, db_password)) {
+			try (PreparedStatement statement = connection.prepareStatement(query)) {
+				try (ResultSet result = statement.executeQuery()) {
+					while (result.next()) {
 						uuids.add(result.getString("uuid"));
 					}
 				}
@@ -90,41 +87,41 @@ public class HTMLDBDAO implements PagesDAO {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
+
 		return uuids;
 	}
-	
+
 	@Override
 	public String createUuid() {
 		UUID randomUuid = UUID.randomUUID();
 		String uuid = randomUuid.toString();
-			
+
 		return uuid;
 	}
 
 	@Override
 	public void delete(String uuid) throws NotFoundException {
 		String query = "DELETE FROM HTML WHERE uuid LIKE ?";
-		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
-			try(PreparedStatement statement = connection.prepareStatement(query)){
+		try (Connection connection = DriverManager.getConnection(db_url, db_user, db_password)) {
+			try (PreparedStatement statement = connection.prepareStatement(query)) {
 				statement.setString(1, uuid);
 				int result = statement.executeUpdate();
-				if(result!=1) throw new NotFoundException("Not page found by the specified uuid when trying to delete");
+				if (result != 1)
+					throw new NotFoundException("Not page found by the specified uuid when trying to delete");
 			}
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
-	public String  putPage(String []content) {
-		System.out.println("El contenido es en el dao: "+content[0]);
-		String uuid= createUuid();
+	public String putPage(String[] content) {
+		String uuid = createUuid();
 		String query = "INSERT INTO HTML VALUES (?,?)";
-		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
-			try(PreparedStatement statement = connection.prepareStatement(query)){
+		try (Connection connection = DriverManager.getConnection(db_url, db_user, db_password)) {
+			try (PreparedStatement statement = connection.prepareStatement(query)) {
 				statement.setString(1, uuid);
 				statement.setString(2, content[0]);
 				statement.executeUpdate();

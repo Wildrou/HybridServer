@@ -8,19 +8,22 @@ public abstract class HTMLUtils {
 
 	public static final String DEFAULT_PAGE="<html> <head><title>Hybrid Server</title>"
 			+ "</head><body><p>Miguel Arias Perez</p><p>Victor Otero Cabaleiro</p>"
-			+ "<h1>Hybrid Server</h1> <a href=\"/html\">html</a></body></html>";
+			+ "<h1>Hybrid Server</h1> <a href=\"/html\">html</a>"
+			+ "<p><a href=\"/xml\">xml</a></p>"
+			+ "<p><a href=\"/xsd\">xsd</a></p>"
+			+ "<p><a href=\"/xslt\">xslt</a></p></body></html>";
 	
 
 	
 	
 	
-	public static String generateHTMLWebs(ArrayList<String> uuids) {
+	public static String generateHTMLWebs(ArrayList<String> uuids,String resource_name) {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html> <head><title>Hybrid Server</title></head><body>"
 				+ "<h1>Hybrid Server</h1>");
 		for (String uuid : uuids) {
-			sb.append("<p><a href=\"html?uuid=").append(uuid).append("\">").append(uuid).append("</a></p>\n");
+			sb.append("<p><a href=\"").append(resource_name).append("?uuid=").append(uuid).append("\">").append(uuid).append("</a></p>\n");
 		}
 
 		sb.append("</body></html>");

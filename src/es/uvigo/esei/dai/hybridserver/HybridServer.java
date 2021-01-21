@@ -36,7 +36,7 @@ public class HybridServer {
 	public HybridServer() {
 		this.numClients=50;
 		this.servicePort=8888;
-		this.config=null;
+		this.config=new Configuration();
 		this.properties=null;
 		
 	
@@ -60,9 +60,6 @@ public class HybridServer {
 		this.config= new Configuration(this.servicePort,this.numClients,null,
 				properties.getProperty("db.user"),
 				properties.getProperty("db.password"),properties.getProperty("db.url"),new ArrayList<ServerConfiguration>());
-		/*	this.db_url = properties.getProperty("db.url");
-		this.db_user = properties.getProperty("db.user");
-		this.db_password = properties.getProperty("db.password");*/
 	}
 	
 	public HybridServer(Configuration config) {
