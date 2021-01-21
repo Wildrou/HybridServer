@@ -124,6 +124,7 @@ public class HybridServer {
 		}
 		this.serverThread = null;
 		
+		if(this.webService != null)
 		this.endpnt.stop();
 	}
 }

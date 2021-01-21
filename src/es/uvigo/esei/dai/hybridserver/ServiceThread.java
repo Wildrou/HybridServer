@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.List;
 import java.util.Properties;
 
 import javax.xml.XMLConstants;
@@ -85,6 +86,7 @@ public class ServiceThread implements Runnable {
 					case GET:
 						if (!http_request.getResourceParameters().containsKey("uuid")) {
 							web_content = HTMLUtils.generateHTMLWebs(controller.webList());
+							System.out.println("Esto es el contenido del list"+web_content);
 							http_response.setContent(web_content);
 							http_response.setContentType("html");
 						} else {
@@ -97,16 +99,20 @@ public class ServiceThread implements Runnable {
 									String web_content_uuid = controller.getWeb(uuid);
 									if(web_content_uuid == null)
 										throw new NotFoundException("Can not find any resource by the specified uuid");
-									ObjetoXSLT xslt = controller.getXSLT(xslt_uuid);
-		                             if(xslt == null)
-		                            	 throw new NotFoundException("Can not find any xslt by the specified uuid");
-									String web_content_xsd = controller.getXSD(xslt.getUuid_xsd());
+									System.out.println("El uuid del xslt antes del controlador es: "+xslt_uuid);
+									List<String> xslt = controller.getXSLT(xslt_uuid);
+									System.out.println("El uuid del xslt despues del controlador es: "+xslt_uuid);
+									if(xslt == null)
+										System.out.println("Efectivamente jefe");
+		                             if(xslt.isEmpty())
+		                            	 throw new NotFoundException("Can not find any xslt by the specified uuid: "+xslt_uuid);
+		                             System.out.println("Aun vive: "+xslt_uuid);
+		                             String web_content_xsd = controller.getXSD(xslt.get(1));
 									if(web_content_xsd== null)
 										throw new NotFoundException("Can not find the specified xsd");
-
 									StringReader input = new StringReader(web_content_uuid);
 									StringReader xmlReader = new StringReader(web_content_uuid);
-									StringReader xsltReader = new StringReader(xslt.getContent());
+									StringReader xsltReader = new StringReader(xslt.get(0));
 									StringReader xsdReader = new StringReader(web_content_xsd);
 									
 									StringWriter output = new StringWriter();
@@ -143,7 +149,7 @@ public class ServiceThread implements Runnable {
 									throw new NotFoundException("Can not find any resource by the specified uuid");
 								http_response.setContent(web_content);			
 								}catch(NotFoundException e) {
-									System.out.println("Puta");
+						
 									http_response.setStatus(HTTPResponseStatus.S404);
 									
 								}
@@ -235,6 +241,7 @@ public class ServiceThread implements Runnable {
 				http_response.print(wr);
 
 			} catch (RuntimeException e) {
+				System.out.println("el error 500 es de :"+e.toString());
 				http_response.setVersion(http_request.getHttpVersion());
 				http_response.setStatus(HTTPResponseStatus.S500);
 				http_response.print(wr);

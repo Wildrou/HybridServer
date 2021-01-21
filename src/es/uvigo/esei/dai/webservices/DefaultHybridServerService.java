@@ -47,13 +47,9 @@ public class DefaultHybridServerService implements HybridServerService {
 	
 
 	@Override
-	public ObjetoXSLT getXSLT(String uuid) {
-		System.out.println("LLega amigos");
-		ObjetoXSLT pepino = new ObjetoXSLT("pepino","que flipas");
-		System.out.println("Esto es el pepino"+pepino.toString());
-		ObjetoXSLT xslt = new XMLDBDAO(this.config).getXSLT(uuid);
-		System.out.println("se ha liau que flaipas"+xslt.getContent());
-		return xslt;
+	public List<String> getXSLT(String uuid) {
+		System.out.println("El uuid del xslt es en DefaultServerService : "+uuid);
+		return  new XMLDBDAO(this.config).getXSLT(uuid);
 	}
 	private PagesDAO getDAO(Configuration config, String resource) {
 		PagesDAO dao;

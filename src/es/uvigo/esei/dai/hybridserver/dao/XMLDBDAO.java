@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -138,14 +139,18 @@ public class XMLDBDAO implements PagesDAO {
 		return uuid;
 	}
 
-	public ObjetoXSLT getXSLT(String uuid){
+	public List<String> getXSLT(String uuid){
 		String query = "SELECT * FROM XSLT WHERE uuid LIKE ?";
+		List <String> lista = new ArrayList<>();
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
 				statement.setString(1, uuid);
 				try(ResultSet result = statement.executeQuery()){
 					if(result.next()) {
-						return new ObjetoXSLT(result.getString("content"),result.getString("xsd"));
+						System.out.println("Llega y conxtent es"+result.getString("content"));
+						lista.add(result.getString("content"));
+						lista.add(result.getString("xsd"));
+						return lista;
 					}
 				}
 			}
@@ -154,7 +159,7 @@ public class XMLDBDAO implements PagesDAO {
 			throw new RuntimeException(e);
 			
 		}
-		return null;
+		return lista;
 	}
 	
 	public String getWeb_XSD(String uuid){

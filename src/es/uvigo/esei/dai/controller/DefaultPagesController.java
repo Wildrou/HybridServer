@@ -56,14 +56,17 @@ public class DefaultPagesController implements PagesController {
 
 	@Override
 	public ArrayList<String> webList() {
-		List<String> uuids = this.dao.webList();
+		ArrayList<String> uuids = this.dao.webList();
 		
 		if (!this.serverConfigList.isEmpty()) {
             try {
                 HybridServerClient ws = new HybridServerClient(this.serverConfigList);
                 List<HybridServerService> hybridServerServiceList = ws.getServers();
                 for (HybridServerService server : hybridServerServiceList) {
+                	System.out.println("Traga hasta aquí");
+                	System.out.println(this.dao.getContentType());
                     List<String> uuidServerList = server.listUuid(this.dao.getContentType());
+                    System.out.println("En este servidor cogemos: "+uuidServerList.toString());
                     for (String uuid : uuidServerList) {
                         uuids.add(uuid);
                     }
@@ -72,7 +75,7 @@ public class DefaultPagesController implements PagesController {
                 System.err.println("Malformed Url");
             }
 		}
-		return this.dao.webList();
+		return uuids;
 	}
 
 	@Override
@@ -117,26 +120,27 @@ public class DefaultPagesController implements PagesController {
 		
 	}
 	
-	public ObjetoXSLT getXSLT(String xslt_uuid) {
-	
-		ObjetoXSLT xslt1= ((XMLDBDAO)this.dao).getXSLT(xslt_uuid);
-		if (!this.serverConfigList.isEmpty() && xslt1 == null) {
+	public List<String> getXSLT(String xslt_uuid) {
+		System.out.println("Uuid es antes de pasar de LOCAL :"+xslt_uuid);
+		List<String> xslt= ((XMLDBDAO)this.dao).getXSLT(xslt_uuid);
+		if (!this.serverConfigList.isEmpty() && xslt.isEmpty()) {
             try {
+            	System.out.println("Uuid es :"+xslt_uuid);
                 HybridServerClient ws = new HybridServerClient(this.serverConfigList);
                 List<HybridServerService> hybridServerServiceList = ws.getServers();
                 for (HybridServerService server : hybridServerServiceList) {
-                	System.out.println("Uuid xslt es "+xslt_uuid);
-                     ObjetoXSLT xslt = server.getXSLT(xslt_uuid);
-                    if(xslt != null)
+                	System.out.println("Uuid xslt es dentro del for "+xslt_uuid);
+                    xslt = server.getXSLT(xslt_uuid);
+                    System.out.println("El contenido de la lista xslt en el for es: "+xslt.toString());
+                    if(!xslt.isEmpty())
                     	return xslt;
                 }
             } catch (MalformedURLException e) {
                 System.err.println("Malformed Url");
             }
 		}
-		if(xslt1== null)
-			return null;
-		return xslt1;
+	
+		return xslt;
 		
 	}
 	
@@ -147,6 +151,7 @@ public class DefaultPagesController implements PagesController {
 		
 		if (!this.serverConfigList.isEmpty() && content == null) {
             try {
+            	
                 HybridServerClient ws = new HybridServerClient(this.serverConfigList);
                 List<HybridServerService> hybridServerServiceList = ws.getServers();
                 for (HybridServerService server : hybridServerServiceList) {
