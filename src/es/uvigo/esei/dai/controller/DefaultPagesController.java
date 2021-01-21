@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import es.uvigo.esei.dai.entidades.ObjetoXSLT;
-import es.uvigo.esei.dai.entidades.ServerConfiguration;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
+import es.uvigo.esei.dai.hybridserver.ServerConfiguration;
 import es.uvigo.esei.dai.hybridserver.dao.PagesDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XMLDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XSLTDBDAO;

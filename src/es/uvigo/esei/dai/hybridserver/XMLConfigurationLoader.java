@@ -34,9 +34,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import es.uvigo.esei.dai.entidades.Configuration;
-import es.uvigo.esei.dai.entidades.ServerConfiguration;
-
 public class XMLConfigurationLoader {
 	public Configuration load(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

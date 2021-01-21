@@ -23,7 +23,6 @@ import javax.xml.validation.Validator;
 import org.xml.sax.SAXException;
 
 import es.uvigo.esei.dai.controller.DefaultPagesController;
-import es.uvigo.esei.dai.entidades.Configuration;
 import es.uvigo.esei.dai.entidades.ObjetoXSLT;
 import es.uvigo.esei.dai.hybridserver.dao.HTMLDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XMLDBDAO;

@@ -16,8 +16,6 @@ import java.util.concurrent.TimeUnit;
 import javax.xml.ws.Endpoint;
 
 import es.uvigo.esei.dai.controller.*;
-import es.uvigo.esei.dai.entidades.Configuration;
-import es.uvigo.esei.dai.entidades.ServerConfiguration;
 import es.uvigo.esei.dai.hybridserver.dao.*;
 import es.uvigo.esei.dai.webservices.DefaultHybridServerService;
 

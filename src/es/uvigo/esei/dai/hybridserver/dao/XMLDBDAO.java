@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
-import es.uvigo.esei.dai.entidades.Configuration;
 import es.uvigo.esei.dai.entidades.ObjetoXSLT;
+import es.uvigo.esei.dai.hybridserver.Configuration;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
 public class XMLDBDAO implements PagesDAO {
