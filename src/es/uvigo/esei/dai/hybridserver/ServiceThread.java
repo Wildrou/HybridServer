@@ -23,6 +23,7 @@ import javax.xml.validation.Validator;
 import org.xml.sax.SAXException;
 
 import es.uvigo.esei.dai.controller.DefaultPagesController;
+import es.uvigo.esei.dai.entidades.Configuration;
 import es.uvigo.esei.dai.entidades.ObjetoXSLT;
 import es.uvigo.esei.dai.hybridserver.dao.HTMLDBDAO;
 import es.uvigo.esei.dai.hybridserver.dao.XMLDBDAO;
@@ -99,14 +100,9 @@ public class ServiceThread implements Runnable {
 									String web_content_uuid = controller.getWeb(uuid);
 									if(web_content_uuid == null)
 										throw new NotFoundException("Can not find any resource by the specified uuid");
-									System.out.println("El uuid del xslt antes del controlador es: "+xslt_uuid);
 									List<String> xslt = controller.getXSLT(xslt_uuid);
-									System.out.println("El uuid del xslt despues del controlador es: "+xslt_uuid);
-									if(xslt == null)
-										System.out.println("Efectivamente jefe");
 		                             if(xslt.isEmpty())
 		                            	 throw new NotFoundException("Can not find any xslt by the specified uuid: "+xslt_uuid);
-		                             System.out.println("Aun vive: "+xslt_uuid);
 		                             String web_content_xsd = controller.getXSD(xslt.get(1));
 									if(web_content_xsd== null)
 										throw new NotFoundException("Can not find the specified xsd");
@@ -135,19 +131,14 @@ public class ServiceThread implements Runnable {
 
 
 								} catch (NotFoundException e) {
-									System.out.println("Entras o que bro");
-									System.err.println("El error es : "+e);
 									http_response.setStatus(HTTPResponseStatus.S404);
 									
 								}
 							}
 							else {
 								try {
-									System.out.println("Entras en el get de html y xsd y xslt");
 								uuid = http_request.getResourceParameters().get("uuid");
-								System.out.println("El uuid de esto es: "+uuid);
 								web_content = controller.getWeb(uuid);
-								System.out.println("Llegas?");
 								if(web_content == null)
 									throw new NotFoundException("Can not find any resource by the specified uuid");
 								http_response.setContent(web_content);			
@@ -177,12 +168,9 @@ public class ServiceThread implements Runnable {
 									|| http_request.getResourceParameters().containsKey("xslt")) {
 								String[] content_array = new String[2];
 								content_array[0] = http_request.getResourceParameters().get(resource_name);
-								System.out.println("El contenido es: "+http_request.getContent());
 								if (http_request.getResourceName().equals("xslt")) {
-									System.out.println("Tiene xsd?:"+http_request.getResourceParameters().containsKey("xsd"));
 									if (!http_request.getResourceParameters().containsKey("xsd"))
-										throw new BadRequestException("Missing xsd parameter for xslt post");
-									System.out.println("ell uuuid del xsd para el xslt en post es:"+http_request.getResourceParameters().get("xsd"));
+										throw new BadRequestException("Missing xsd parameter for xslt post");;
 									if (!controller.checkXSDExists(http_request.getResourceParameters().get("xsd")))
 										throw new NotFoundException("There is no xsd matching the given uuid");
 									else {
@@ -202,7 +190,6 @@ public class ServiceThread implements Runnable {
 							http_response.setStatus(HTTPResponseStatus.S400);
 
 						}catch (NotFoundException e) {
-							System.err.println(e.getMessage());
 							http_response.setStatus(HTTPResponseStatus.S404);
 							
 						}
@@ -247,7 +234,6 @@ public class ServiceThread implements Runnable {
 				http_response.print(wr);
 
 			} catch (RuntimeException e) {
-				System.out.println("el error 500 es de :"+e.toString());
 				http_response.setVersion(http_request.getHttpVersion());
 				http_response.setStatus(HTTPResponseStatus.S500);
 				http_response.print(wr);

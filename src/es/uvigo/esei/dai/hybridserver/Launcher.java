@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import es.uvigo.esei.dai.entidades.Configuration;
+
 public class Launcher {
 	public static void main(String[] args) {
 		try {

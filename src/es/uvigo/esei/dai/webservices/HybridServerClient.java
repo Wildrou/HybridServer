@@ -9,7 +9,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
-import es.uvigo.esei.dai.hybridserver.ServerConfiguration;
+import es.uvigo.esei.dai.entidades.ServerConfiguration;
 
 public class HybridServerClient {
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
 
-import es.uvigo.esei.dai.hybridserver.Configuration;
+import es.uvigo.esei.dai.entidades.Configuration;
 import es.uvigo.esei.dai.hybridserver.NotFoundException;
 
 public class XSLTDBDAO implements PagesDAO {
