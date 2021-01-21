@@ -143,8 +143,11 @@ public class ServiceThread implements Runnable {
 							}
 							else {
 								try {
+									System.out.println("Entras en el get de html y xsd y xslt");
 								uuid = http_request.getResourceParameters().get("uuid");
+								System.out.println("El uuid de esto es: "+uuid);
 								web_content = controller.getWeb(uuid);
+								System.out.println("Llegas?");
 								if(web_content == null)
 									throw new NotFoundException("Can not find any resource by the specified uuid");
 								http_response.setContent(web_content);			
@@ -176,9 +179,11 @@ public class ServiceThread implements Runnable {
 								content_array[0] = http_request.getResourceParameters().get(resource_name);
 								System.out.println("El contenido es: "+http_request.getContent());
 								if (http_request.getResourceName().equals("xslt")) {
+									System.out.println("Tiene xsd?:"+http_request.getResourceParameters().containsKey("xsd"));
 									if (!http_request.getResourceParameters().containsKey("xsd"))
 										throw new BadRequestException("Missing xsd parameter for xslt post");
-									if (controller.getXSDUuid(http_request.getResourceParameters().get("xsd")) == null)
+									System.out.println("ell uuuid del xsd para el xslt en post es:"+http_request.getResourceParameters().get("xsd"));
+									if (!controller.checkXSDExists(http_request.getResourceParameters().get("xsd")))
 										throw new NotFoundException("There is no xsd matching the given uuid");
 									else {
 										content_array[1] = http_request.getResourceParameters().get("xsd");
@@ -197,6 +202,7 @@ public class ServiceThread implements Runnable {
 							http_response.setStatus(HTTPResponseStatus.S400);
 
 						}catch (NotFoundException e) {
+							System.err.println(e.getMessage());
 							http_response.setStatus(HTTPResponseStatus.S404);
 							
 						}

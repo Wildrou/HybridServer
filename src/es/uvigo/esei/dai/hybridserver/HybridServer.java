@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -28,13 +29,13 @@ public class HybridServer {
 	private final Configuration config;
 	private String webService;
 	private Endpoint endpnt;
-	//private final Properties properties;
+	private final Properties properties;
 	
 	public HybridServer() {
 		this.numClients=50;
 		this.servicePort=8888;
 		this.config=null;
-		//this.properties=null;
+		this.properties=null;
 		
 	
 		
@@ -50,20 +51,24 @@ public class HybridServer {
 		
 	}*/
 
-	/*public HybridServer(Properties prop) {
+	public HybridServer(Properties prop) {
 		this.numClients=Integer.parseInt(prop.getProperty("numClients"));
 		this.servicePort=Integer.parseInt(prop.getProperty("port"));
 		this.properties=prop;
-		
-		
-	}*/
+		this.config= new Configuration(this.servicePort,this.numClients,null,
+				properties.getProperty("db.user"),
+				properties.getProperty("db.password"),properties.getProperty("db.url"),new ArrayList<ServerConfiguration>());
+		/*	this.db_url = properties.getProperty("db.url");
+		this.db_user = properties.getProperty("db.user");
+		this.db_password = properties.getProperty("db.password");*/
+	}
 	
 	public HybridServer(Configuration config) {
 		this.numClients=config.getNumClients();
 		this.servicePort=config.getHttpPort();
 		this.config=config;
+		this.properties=null;
 		this.webService= config.getWebServiceURL();
-		//this.controller= new DefaultPagesController(new HTMLDBDAO(properties));
 		
 		
 	}

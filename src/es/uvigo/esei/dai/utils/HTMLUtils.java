@@ -36,7 +36,7 @@ public abstract class HTMLUtils {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html> <head><title>Hybrid Server</title></head><body>"
 				+ "<h1>Hybrid Server</h1>");
-		sb.append("<a href=\\\"").append(resource_name).append("?uuid=" + uuid + "\\\">" + uuid + "</a>");
+		sb.append("<a href=\"").append(resource_name).append("?uuid=" + uuid + "\">" + uuid + "</a>");
 		sb.append("</body></html>");
 		
 		return sb.toString();

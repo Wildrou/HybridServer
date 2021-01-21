@@ -137,7 +137,8 @@ public class XSLTDBDAO implements PagesDAO {
 		return uuid;
 	}
 	
-  public String getXsd(String xsd_uuid) {
+  public Boolean getXSDUuid(String xsd_uuid) {
+	  Boolean exists=false;
 	  String query = "SELECT * FROM XSD WHERE uuid LIKE ?";
 		try(Connection connection = DriverManager.getConnection(db_url,db_user,db_password)){
 			try(PreparedStatement statement = connection.prepareStatement(query)){
@@ -145,7 +146,7 @@ public class XSLTDBDAO implements PagesDAO {
 				try(ResultSet result = statement.executeQuery()){
 					if(result.next()) {
 						
-					result.getString("uuid");
+					exists=true;
 					}
 				}
 			}
@@ -153,7 +154,7 @@ public class XSLTDBDAO implements PagesDAO {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		return null; 
+		return exists; 
 	  
   }
   @Override
